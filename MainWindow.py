@@ -1,19 +1,58 @@
+# System
+import datetime
+import time
 import pygtk
 pygtk.require('2.0')
 import gtk
+import gtk.gtkgl
 
+#import thread
+import threading
 import gobject
 import sys
-#import glob
-#import math
+import glob
+import math
 import os
 
+# Imports
+from OpenGL.GL import *
+from OpenGL.GLU import *
+#GUI
+from MastersNewProjectDialog import *
+from FileChooserWindow           import *
+from pymol import cmd
+from pymol.cgo import *
 
-#if not sys.platform.startswith('win'):
-#    HOME = os.environ.get('HOME')
-#else:
-#    HOME = os.environ.get('PYMOL_PATH')
-#    
+
+
+
+
+if not sys.platform.startswith('win'):
+    HOME = os.environ.get('HOME')
+else:
+    HOME = os.environ.get('PYMOL_PATH')
+
+
+
+
+global slab
+global clicado, ZeroX, ZeroY, Buffer, Zero_ViewBuffer, Menu
+slab            = 50
+zoom            = 1.0
+angle           = 0.0
+sprite          = None
+zfactor         = 0.005
+clicado         = False
+ZeroX           = 0
+ZeroY           = 0
+Buffer          = 0
+Zero_pointerx   = 0
+Zero_pointery   = 0
+Zero_ViewBuffer = None
+Menu            = True
+
+
+
 
 SequenceTest = "MGPPSSSGFYVSRAVALLLAGLVAALLLALAVLAALYGHCERVPPSELPGLRDLEAESSPPLRQKPTPTPKPSSARELAVTTTPSNWRPPGPWDQLRLPPWLVPLHYDLELWPQLRPDELPAGSLPFTGRVNITVRCTVATSRLLLHSLFQDCERAEVRGPLSPGTGNATVGRVPVDDVWFALDTEYMVLELSEPLKPGSSYELQLSFSGLVKEDLREGLFLNVYTDQGERRALLASQLEPTFARYVFPCFDEPALKATFNITMIHHPSYVALSNMPKLGQSEKEDVNGSKWTVTTFSTTPHMPTYLVAFVICDYDHVNRTERGKEIRIWARKDAIANGSADFALNITGPIFSFLEDLFNISYSLPKTDIIALPSFDNHAMENWGLMIFDESGLLLEPKDQLTEKKTLISYVVSHEIGHQWFGNLVTMNWWNNIWLNEGFASYFEFEVINYFNPKLPRNEIFFSNILHNILREDHALVTRAVAMKVENFKTSEIQELFDIFTYSKGASMARMLSCFLNEHLFVSALKSYLKTFSYSNAEQDDLWRHFQMAIDDQSTVILPATIKNIMDSWTHQSGFPVITLNVSTGVMKQEPFYLENIKNRTLLTSNDTWIVPILWIKNGTTQPLVWLDQSSKVFPEMQVSDSDHDWVILNLNMTGYYRVNYDKLGWKKLNQQLEKDPKAIPVIHRLQLIDDAFSLSKNNYIEIETALELTKYLAEEDEIIVWHTVLVNLVTRDLVSEVNIYDIYSLLKRYLLKRLNLIWNIYSTIIRENVLALQDDYLALISLEKLFVTACWLGLEDCLQLSKELFAKWVDHPENEIPYPIKDVVLCYGIALGSDKEWDILLNTYTNTTNKEEKIQLAYAMSCSKDPWILNRYMEYAISTSPFTSNETNIIEVVASSEVGRYVAKDFLVNNWQAVSKRYGTQSLINLIYTIGRTVTTDLQIVELQQFFSNMLEEHQRIRVHANLQTIKNENLKNKKLSARIAAWLRRNT"
 
@@ -38,164 +77,581 @@ ResProp = {'A':['Ala','HID','A'],
            'Y':['Tyr','POL','B'],
            'V':['Val','HID','A']}
 
-def SequenceCount (sequence = "RPPGPWDQLRLPPWLVPLHYDL"):
-    """ Function doc """
-    HID = 0
-    POL = 0
-    for i in sequence:
-        print i, ResProp[i]
-        if ResProp[i][1] == "HID":
-            HID = HID +1
-        else:
-            POL = POL +1
-    print "POL", POL
-    print "HID", HID
-    
-class MastersMain:
-    """ Class doc """
 
+
+def draw(glarea, event):
+    # Get surface and context
+    glcontext = glarea.get_gl_context()
+    gldrawable = glarea.get_gl_drawable()
+
+    # Start opengl context
+    if not gldrawable.gl_begin(glcontext):
+        return
+
+    # Actual drawing
+    global sprite, angle, zoom
+
+    # Clear screen
+    #rabbyt.clear((0.0, 0.0, 0.0))
+
+    # Render sprite
+    if sprite is not None:
+        sprite.rot = angle
+        sprite.scale = zoom
+        sprite.render()
+
+    # Flush screen
+    gldrawable.swap_buffers()
+    pymol.draw()
+    # End opengl context
+    gldrawable.gl_end()
+
+    return True
+# Resizing function
+
+
+def reshape(glarea, event):
+
+    reshape = event
+    reshape_x = reshape.width
+    reshape_y = reshape.height
+    pymol.reshape(reshape_x, reshape_y, 0)
+    pymol.idle()
+    # pymol.draw()
+
+    # Get surface and context
+    glcontext = glarea.get_gl_context()
+    gldrawable = glarea.get_gl_drawable()
+
+    # Start opengl context
+    if not gldrawable.gl_begin(glcontext):
+        return
+
+    # Get widget dimensions
+    x, y, width, height = glarea.get_allocation()
+
+    pymol.reshape(width, height, True)
+
+    # Reset rabbyt viewport
+    #rabbyt.set_viewport((width, height))
+    # rabbyt.set_default_attribs()
+
+    # End opengl context
+    pymol.draw()
+    gldrawable.swap_buffers()
+    gldrawable.gl_end()
+    #
+
+    return True
+
+# Initialization function
+def init(glarea):
+    print 'init'
+    # Get surface and context
+    glcontext = glarea.get_gl_context()
+    gldrawable = glarea.get_gl_drawable()
+
+    # Start opengl context
+    if not gldrawable.gl_begin(glcontext):
+        return
+
+    # Get widget dimensions
+    x, y, width, height = glarea.get_allocation()
+
+    # Reset rabbyt viewport
+    #rabbyt.set_viewport((width, height))
+    # rabbyt.set_default_attribs()
+
+    # Get sprite variable
+    global sprite
+
+    # Load sprite
+    #sprite = rabbyt.Sprite('sprite.png')
+
+    # End opengl context
+    gldrawable.gl_end()
+
+    return True
+
+# Idle function
+def idle(glarea):
+    # Get vars
+    global angle, zoom, zfactor
+
+    # Update angle
+    angle += 1.0
+    if angle > 359:
+        angle = 0.0
+
+    # Update zoom
+    if zoom > 10 or zoom < 1:
+        zfactor = -zfactor
+        zoom += zfactor
+
+    # Needed for synchronous updates
+    glarea.window.invalidate_rect(glarea.allocation, False)
+    glarea.window.process_updates(False)
+
+    return True
+
+# Map events function
+def map(glarea, event):
+    # print 'map'
+    # Add idle event
+    gobject.idle_add(idle, glarea)
+    return True
+
+def slabchange(button, event):
+    global slab
+    x, y, width, height = glarea.get_allocation()
+    if event.direction == gtk.gdk.SCROLL_UP:
+        step = 1.5
+        slab = slab + step
+        slab = slab + step
+        # if  slab >=100:
+        #   slab = 100
+    else:
+        step = -1.5
+
+        slab = slab + step
+        if slab <= -5:
+            slab = -5
+    pymol.cmd.clip('slab', slab)
+    #cmd.zoom(buffer = Buffer)
+    return step
+    pymol.button(button, 0, x, y, 0)
+    pymol.idle()
+
+def show_context_menu(widget, event):
+    x, y, state = event.window.get_pointer()
+    if clicado:
+        if event.button == 3:
+            widget.popup(None, None, None, event.button, event.time)
+
+def mousepress(button, event):
+    global ZeroX, ZeroY
+    
+    ZeroX, ZeroY, state = event.window.get_pointer()
+    
+    #print ZeroX, ZeroY
+    
+    x, y, width, height = glarea.get_allocation()
+
+        
+    if event.button == 3:
+        global clicado
+        clicado = True
+        #print 'gordao'
+        x, y, width, height = glarea.get_allocation()
+        #print x, y, width, height
+        mousepress = event
+        button = mousepress.button - 1
+        pointerx = int(mousepress.x)
+        pointery = int(mousepress.y)
+        calc_y = height - pointery
+        #print pointerx,pointery,calc_y
+        #cmd.zoom(buffer=calc_y)
+        pymol.button(button, 0, pointerx , calc_y, 0)
+
+        
+    if event.button != 3:
+        x, y, width, height = glarea.get_allocation()
+        mousepress = event
+        button = mousepress.button - 1
+        pointerx = int(mousepress.x)
+        pointery = int(mousepress.y)
+        calc_y = height - pointery
+        pymol.button(button, 0, pointerx, calc_y, 0)
+
+def mouserelease(button, event):
+    x, y, width, height = glarea.get_allocation()
+    mouserelease = event
+    button = mouserelease.button - 1
+    pointerx = int(mouserelease.x)
+    pointery = int(mouserelease.y)
+    calc_y = height - pointery
+    pymol.button(button, 1, pointerx, calc_y, 0)
+    
+def mousemove(button, event):
+    global clicado, Buffer,Zero_pointerx, Zero_pointery, Zero_ViewBuffer, Menu
+    x, y, width, height = glarea.get_allocation()
+    clicado = False
+    mousemove = event
+    pointerx = int(mousemove.x)
+    pointery = int(mousemove.y)
+
+    calc_y2  = (float(Zero_pointery - pointery))/10.0
+    calc_y   = height - pointery
+    
+    if clicado:
+        global ZeroY
+        #print 'a'
+        #print clicado
+        #print Menu
+        #Buffer = (calc_y2)
+        #_view   = cmd.get_view()
+        #
+        #print _view
+        #if Zero_ViewBuffer == None:
+        #   Zero_ViewBuffer = _view[11]
+        #
+        #_view11 = Zero_ViewBuffer - Buffer
+        #_view15 = _view[15]       - Buffer
+        #_view16 = _view[16]       + Buffer
+        #
+        #_view2 = (_view[0], _view[1], _view[2],
+        #         _view[3], _view[4], _view[5],
+        #         _view[6], _view[7], _view[8],
+        #         _view[9], _view[10],_view11,
+        #         _view[12],_view[13],_view[14],
+        #         _view15,  _view16,  _view[17])
+        #
+        #print Buffer, _view11, _view15,_view16
+        #cmd.set_view(_view2)
+        #Zero_pointerx   = pointerx
+        #Zero_pointery   = pointery
+        #Zero_ViewBuffer = _view11
+    #else:
+    pymol.drag(pointerx, calc_y, 0)
+    pymol.idle()
+
+def my_menu_func(menu):
+    print "Menu clicado"
+
+def context_menu():
+    builder = masters.builder
+    menu = builder.get_object('GLArea_menu')
+    return menu
+
+
+# Create opengl configuration
+try:
+    # Try creating rgb, double buffering and depth test modes for opengl
+    glconfig = gtk.gdkgl.Config(mode=(gtk.gdkgl.MODE_RGB |
+                                      gtk.gdkgl.MODE_DOUBLE |
+                                      gtk.gdkgl.MODE_DEPTH))
+except:
+    # Failed, so quit
+    sys.exit(0)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+class MastersMain():
+    
+    
+    def TREEVIEW_ADD_DATA(self, liststore=None, pymol_objects=[], active=0):
+        """ Function doc """
+        model = liststore  # @+
+        model.clear()
+        n = 0
+        for i in pymol_objects:
+            data = [i]
+            model.append(data)
+            n = n + 1
+    
+    def OpenMasterFile (self, filename):
+        """ Function doc """
+        arq = open(filename, "r")
+        t = None
+        s = None
+        
+        history = []
+        
+        for line in arq:
+            line2 = line.split()
+
+            if line2[0] == 'REMARK':
+                print line
+                if line2[1] == "t":
+                    t = line2[3].split(',')
+                elif line2[1] == "s":
+                    s = line2[3].split(',')
+                else:
+                    history.append(str(line[6:]))
+                    
+        liststore = self.builder.get_object('liststore1')
+        self.TREEVIEW_ADD_DATA(liststore, history)
+        
+        #print t
+        #print s
+        print history
+        x = []
+        y = []
+        for i in t:
+            x.append(float(i))
+        for i in s:
+            y.append(float(i))    
+        
+        self.PlotData(x,y)
+        #cmd.load(filename)
+        cmd.load('MastersSaida.pdb')                            #
+        cmd.show("spheres")                                     #
+        cmd.hide('line')                                        #
+        cmd.show('ribbon')                                      #
+        cmd.do('select resn leu')
+        cmd.do('color red, sele')
+        
+        cmd.do('select resn ser')
+        cmd.do('color blue, sele')
+        #cmd.do('show cell')
+
+
+    def PlotData(self, x, y):
+        """ Function doc """
+        import gtk
+        from matplotlib.figure import Figure
+        #from numpy import arange, sin, pi
+        self.builder.get_object('vbox4').set_size_request(500, 400)
+
+        import numpy as np
+        #import matplotlib.pyplot as plt
+        
+        # uncomment to select /GTK/GTKAgg/GTKCairo
+        from matplotlib.backends.backend_gtkagg import FigureCanvasGTKAgg as FigureCanvas
+        from matplotlib.backends.backend_gtkagg import NavigationToolbar2GTKAgg as NavigationToolbar
+        
+        x1 = x
+        #x2 = x
+        
+        y1 = y
+        #y2 = y
+        
+        #x1 = np.linspace(0.0, 5.0)
+        x2 = np.linspace(0.0, 2.0)
+        print x2
+        #y1 = np.cos(2 * np.pi * x1) * np.exp(-x1)
+        y2 = np.cos(2 * np.pi * x2)
+        
+        box = self.builder.get_object('vbox4')
+        self.graph = box
+
+        f = Figure(figsize=(5, 4), dpi=150)
+        a = f.add_subplot(2, 1, 1)
+        a.plot(x1, y1, 'yo-')
+        #a.title('A tale of 2 subplots')
+        #a.ylabel('Damped oscillation')
+        
+        a = f.add_subplot(2, 1, 2)
+        a.plot(x2, y2, 'r.-')
+        #a.subplot(2, 1, 2)
+        #a.plot(x2, y2, 'r.-')
+        #a.xlabel('time (s)')
+        #a.ylabel('Undamped')
+
+        canvas = FigureCanvas(f)  # a gtk.DrawingArea
+        self.graph.pack_start(canvas)
+        toolbar = NavigationToolbar(canvas, self.graph)
+        self.graph.pack_end(toolbar, False, False)
+        self.graph.show_all()
+
+
+    def on_toolbutton_NewProject_clicked(self, button):
+        """ Function doc """
+        self.NewProjectDialog.dialog.run()
+        self.NewProjectDialog.dialog.hide()
+    
+    def on_toolbutton_LoadMasterProject_clicked(self, button):
+        """ Function doc """
+        FileChooser = FileChooserWindow()
+        FileName = FileChooser.GetFileName(self.builder)
+        try:
+            _FileType = GetFileType(FileName)
+
+            if _FileType in ['log', 'pdb']:
+                self.project.load_coordinate_file_as_new_system(FileName)
+                self.project.From_PDYNAMO_to_GTKDYNAMO(type_='new')
+        except:
+            pass
+        print FileName
+        self.OpenMasterFile (FileName)
+    
+    def on_toolbutton_SaveProject_clicked (self, button):
+        """ Function doc """
+        print "Save project"
+    
+    def on_toolbutton_SaveAsProject_clicked (self, button):
+        """ Function doc """
+        print "Save As project"        
+        
+    def on_toolbutton_SetupBoxSize_clicked (self, button):
+        """ Function doc """
+        print "Box setup"        
+
+        
     def testGTKMatplotLib(self, button):
         """ Function doc """
         import gtk
         from matplotlib.figure import Figure
-        from numpy import arange, sin, pi
+        #from numpy import arange, sin, pi
+        self.builder.get_object('vbox4').set_size_request(500, 400)
 
+        import numpy as np
+        #import matplotlib.pyplot as plt
+        
         # uncomment to select /GTK/GTKAgg/GTKCairo
         from matplotlib.backends.backend_gtkagg import FigureCanvasGTKAgg as FigureCanvas
         from matplotlib.backends.backend_gtkagg import NavigationToolbar2GTKAgg as NavigationToolbar
 
+        x1 = np.linspace(0.0, 5.0)
+        x2 = np.linspace(0.0, 2.0)
+        y1 = np.cos(2 * np.pi * x1) * np.exp(-x1)
+        y2 = np.cos(2 * np.pi * x2)
+        print x1
+        print x2
+        #plt.subplot(2, 1, 1)
+        #plt.plot(x1, y1, 'yo-')
+        #plt.title('A tale of 2 subplots')
+        #plt.ylabel('Damped oscillation')
+        #
+        #plt.subplot(2, 1, 2)
+        #plt.plot(x2, y2, 'r.-')
+        #plt.xlabel('time (s)')
+        #plt.ylabel('Undamped')
+
+        #plt.show()
+
         box = self.builder.get_object('vbox4')
         self.graph = box
 
-        f = Figure(figsize=(5, 4), dpi=100)
-        a = f.add_subplot(111)
-        #t = arange(0.0,3.0,0.01)
-        #s = sin(2*pi*t)
-        t = range(0, 10)
-        s = range(0, 10)
+        f = Figure(figsize=(5, 4), dpi=150)
+        a = f.add_subplot(2, 1, 1)
+        a.plot(x1, y1, 'yo-')
+        #a.title('A tale of 2 subplots')
+        #a.ylabel('Damped oscillation')
+        
+        a = f.add_subplot(2, 1, 2)
+        a.plot(x2, y2, 'r.-')
+        #a.subplot(2, 1, 2)
+        #a.plot(x2, y2, 'r.-')
+        #a.xlabel('time (s)')
+        #a.ylabel('Undamped')
 
-        t = [0,
-             5,
-             10,
-             15,
-             20,
-             25,
-             30,
-             35,
-             40,
-             45,
-             50,
-             55,
-             60,
-             65,
-             70,
-             75,
-             80,
-             85,
-             90,
-             95,
-             100,
-             105,
-             110,
-             115,
-             120,
-             125,
-             130,
-             135,
-             140,
-             145,
-             150,
-             155,
-             160,
-             165,
-             170,
-             175,
-             180,
-             185,
-             190,
-             195,
-             200]
-
-        s = [-913.53086808,
-             -1978.05074306,
-             -2218.21815405,
-             -2333.01919415,
-             -2391.82858579,
-             -2435.17776079,
-             -2486.44564867,
-             -2543.07423428,
-             -2571.71716511,
-             -2598.62940311,
-             -2616.98004127,
-             -2631.60794731,
-             -2648.00535887,
-             -2661.72725012,
-             -2675.65233140,
-             -2686.34375946,
-             -2696.94907090,
-             -2708.65130605,
-             -2718.73853503,
-             -2726.36193409,
-             -2732.59504750,
-             -2737.83623730,
-             -2742.33435229,
-             -2745.28712806,
-             -2748.82036113,
-             -2752.12502818,
-             -2754.57566090,
-             -2756.97531091,
-             -2758.83136980,
-             -2760.53521449,
-             -2762.79017667,
-             -2764.47319544,
-             -2765.99011566,
-             -2767.77186148,
-             -2770.20329165,
-             -2772.66204338,
-             -2775.05818125,
-             -2776.97966619,
-             -2779.02106271,
-             -2781.43441141,
-             -2783.70324049]
-
-        a.plot(t, s, 'ko', t, s, 'k')
-        #a.plot(x, y, 'ko',x, y,'k')
         canvas = FigureCanvas(f)  # a gtk.DrawingArea
         self.graph.pack_start(canvas)
         toolbar = NavigationToolbar(canvas, self.graph)
         self.graph.pack_end(toolbar, False, False)
         self.graph.show_all()
         # gtk.main()
-
-
-
-
-    def on_toolbutton_NewProject_clicked(self, button):
-        """ Function doc """
-
-        
-        print 'New Project'
-        for i in ResProp:
-            print i ,ResProp[i][0], ResProp[i][1]
-
-        
-        SequenceCount()
-        
     def __init__(self):
-        self.builder = gtk.Builder()                                     
-        self.builder.add_from_file("MastersMainWindow.glade")                     
-                                                             
-        self.win = self.builder.get_object("window1")                        
-        self.builder.connect_signals(self)
-        self.win.show()                                                  
-    
-    def run(self):
-        gtk.main()                   
+        print '           Intializing MasterGUI object          '
+        self.home = os.environ.get('HOME')
 
+        #---------------------------------- MasterGUI ------------------------------------#
+        #                                                                                 #
+        #                                                                                 #
+        self.builder = gtk.Builder()                                                      #
+        self.builder.add_from_file("MastersMainWindow.glade")                             #
+        #                                                                                 #
+        self.win = self.builder.get_object("window1")                                     #
+        #                                                                                 #
+        self.win.show()                                                                   #
+        #                                                                                 #
+        self.builder.connect_signals(self)                                                #
+        #                                                                                 #
+        #---------------------------------------------------------------------------------#
+
+        container = self.builder.get_object("container")
+        pymol.start()
+        cmd = pymol.cmd
+        container.pack_start(glarea)
+        glarea.show()
+
+        #-------------------- config PyMOL ---------------------#
+        #                                                       #
+        pymol.cmd.set("internal_gui", 0)                        #
+        pymol.cmd.set("internal_gui_mode", 0)                   #
+        pymol.cmd.set("internal_feedback", 0)                   #
+        pymol.cmd.set("internal_gui_width", 220)                #
+        sphere_scale = 0.1                                      #
+        stick_radius = 0.15                                     #
+        label_distance_digits = 4                               #
+        mesh_width = 0.3                                        #
+        cmd.set('sphere_scale', sphere_scale)                   #
+        cmd.set('stick_radius', stick_radius)                   #
+        cmd.set('label_distance_digits', label_distance_digits) #
+        cmd.set('mesh_width', mesh_width)                       #
+        cmd.set("retain_order")         # keep atom ordering    #
+        cmd.bg_color("grey")            # background color      #
+        cmd.do("set field_of_view, 70")                         #
+        cmd.do("set ray_shadows,off")                           #
+                                                                #
+                                                                #
+
+        cmd.set('ribbon_sampling', 3)                           #
+        #-------------------------------------------------------#
+   
+        cmd.do('select resn leu')
+        cmd.do('color red, sele')
+        
+        cmd.do('select resn ser')
+        cmd.do('color blue, sele')
+        
+        '''
+        #----------------- Setup ComboBoxes -------------------------#
+        #                                                            #
+        combobox = 'combobox1'                                       #
+        combolist = ["Atom", "Residue", "Chain", "Molecule"]         #
+        self.window_control.SETUP_COMBOBOXES(combobox, combolist, 1) #
+        #                                                            #
+        #------------------------------------------------------------#
+
+
+        #--------------------------------------------------GTKDynamo project---------------------------------------------------------#
+        #                                                                                                                            #
+        self.project = pDynamoProject(                                                                                               #
+            data_path=GTKDYNAMO_TMP, builder=self.builder, window_control=self.window_control)                                       #
+        #                                                                                                                            #
+        self.project.PyMOL = True                                                                                                    #
+        #                                                                                                                            #
+        #----------------------------------------------------------------------------------------------------------------------------#
+        '''
+        
+        self.NewProjectDialog = NewProjectDialog()                                            
+
+    def run(self):
+        gtk.main()
+
+
+print "Creating object"
+glarea = gtk.gtkgl.DrawingArea(glconfig)
+glarea.set_size_request(600, 400)
+glarea.connect_after('realize', init)
+glarea.connect('configure_event', reshape)
+glarea.connect('expose_event', draw)
+glarea.connect('map_event', map)
+glarea.set_events(glarea.get_events() | gtk.gdk.BUTTON_PRESS_MASK | gtk.gdk.BUTTON_RELEASE_MASK |
+                  gtk.gdk.POINTER_MOTION_MASK | gtk.gdk.POINTER_MOTION_HINT_MASK | gtk.gdk.KEY_PRESS_MASK)                      
+
+glarea.connect("button_press_event", mousepress)      
+glarea.connect("button_release_event", mouserelease)  
+glarea.connect("motion_notify_event", mousemove)      
+glarea.connect("scroll_event", slabchange)
+glarea.set_can_focus(True)
+
+import pymol2
+pymol   = pymol2.PyMOL(glarea)
 masters = MastersMain()
-#import sys
-#if len(sys.argv) > 1:
-#    gtkdynamo.project.load_coordinate_file_as_new_system(sys.argv[1])
-#    gtkdynamo.project.From_PDYNAMO_to_GTKDYNAMO(type_='new')
-#
+
+glarea.connect_object("button_release_event", show_context_menu, context_menu())
 masters.run()
+
+
+

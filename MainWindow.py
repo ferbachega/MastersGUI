@@ -411,7 +411,7 @@ class MastersMain():
         
         cmd.do('select resn ser')
         cmd.do('color blue, sele')
-        #cmd.do('show cell')
+        cmd.do('show cell')
 
 
     def PlotData(self, x, y):

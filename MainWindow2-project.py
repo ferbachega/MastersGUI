@@ -40,12 +40,13 @@ import math
 import os
 
 # Imports
-from OpenGL.GL import *
-from OpenGL.GLU import *
+#from OpenGL.GL import *
+#from OpenGL.GLU import *
 
 #GUI
-from FileChooserWindow           import *
-from MastersProject              import *
+from FileChooserWindow    import *
+from NewProjectDialog     import NewProjectDialog
+
 
 class MastersMain():
     
@@ -53,7 +54,6 @@ class MastersMain():
         """ Function doc """
         self.NewProjectDialog.dialog.run()
         self.NewProjectDialog.dialog.hide()
-
     def on_toolbutton_LoadMasterProject_clicked(self, button):
         """ Function doc """
         FileChooser = FileChooserWindow()
@@ -103,28 +103,47 @@ class MastersMain():
         self.win.show()                                                                   #
         self.builder.connect_signals(self)                                                #
         #---------------------------------------------------------------------------------#
+
+        self.projects = {}
+        '''
+        'title' : {'path' : None,
+                   'type' : None, 
+              'generated' : None, 
+               'modified' : None } 
+        '''                
+
+
         
-        
+        '''
         #-----------------------------------------------#
         #             MastersProjectControl             #
         #-----------------------------------------------#
         projects = ProjectsControl(self.builder, True)  #
         projects.AddHistoryToTreeview()                 #
         #-----------------------------------------------#
+        '''
+        
+        
+        # Dialogs
+        self.NewProjectDialog = NewProjectDialog(self.projects, self.builder)
+        
+        
+        
+        
         
         
         #-----------------------------------------------#
         #            MastersProjectTextView             #
         #-----------------------------------------------#
-        textview   = self.builder.get_object("textview1")
-        textbuffer = textview.get_buffer()
-        infile = open("./test/NoName.out", "r")
-
-        if infile:
-            string = infile.read()
-            infile.close()
-            textbuffer.set_text(string)
-        #self.NewProjectDialog = NewProjectDialog()                                            
+        #textview   = self.builder.get_object("textview1")
+        #textbuffer = textview.get_buffer()
+        #infile = open("./test/NoName.out", "r")
+        #
+        #if infile:
+        #    string = infile.read()
+        #    infile.close()
+        #    textbuffer.set_text(string)
+        ##self.NewProjectDialog = NewProjectDialog()                                            
 
     def run(self):
         gtk.main()

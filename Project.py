@@ -169,20 +169,6 @@ class LogFileWriter:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 def main():
     Project =  MasterProject()
     #pprint (Project.settings['jobs'])

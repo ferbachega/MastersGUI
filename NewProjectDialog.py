@@ -23,7 +23,8 @@
 #  
 import os
 import gtk
-
+import time
+from pprint import pprint
 
 AminoAcidDic = {'A':['Ala','HID','A'],
                 'R':['Arg','POL','B'],
@@ -45,6 +46,11 @@ AminoAcidDic = {'A':['Ala','HID','A'],
                 'W':['Trp','POL','B'],
                 'Y':['Tyr','POL','B'],
                 'V':['Val','HID','A']}
+
+
+def NewProject (project):
+    """ Function doc """
+    pass
 
 
 class NewProjectDialog():
@@ -99,7 +105,7 @@ class NewProjectDialog():
         
         
         
-        print self.projects
+        pprint (self.projects)
         
         
         # agora tem que criar a pasta do projeto com as info relevantes

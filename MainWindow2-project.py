@@ -46,6 +46,30 @@ import os
 #GUI
 from FileChooserWindow    import *
 from NewProjectDialog     import NewProjectDialog
+from WindowControl        import WindowControl
+
+
+HOME = os.environ.get('HOME')
+
+if not os.path.isdir(HOME +'/.config/MASTERS' ):
+    os.mkdir(HOME +'/.config/MASTERS' )
+    print "Temporary files directory:  %s" % HOME +'/.config/MASTERS' 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 class MastersMain():
@@ -54,6 +78,7 @@ class MastersMain():
         """ Function doc """
         self.NewProjectDialog.dialog.run()
         self.NewProjectDialog.dialog.hide()
+    
     def on_toolbutton_LoadMasterProject_clicked(self, button):
         """ Function doc """
         FileChooser = FileChooserWindow()
@@ -77,20 +102,29 @@ class MastersMain():
 
         model = tree.get_model()  # @+
         iter = model.get_iter(path)  # @+
-        pymol_object = model.get_value(iter, 1)  # @+
-        true_or_false = model.get_value(iter, 0)
+        pymol_object = model.get_value(iter, 0)  # @+
+        #true_or_false = model.get_value(iter, 0)
         # atomtype = model.get_value( iter, 2) #@+
         # print true_or_false
-
-        if true_or_false == False:
-            true_or_false = True
-            model.set(iter, 0, true_or_false)
-            # print true_or_false
-
-        else:
-            true_or_false = False
-            model.set(iter, 0, true_or_false)
-            # print true_or_false
+        print pymol_object
+        Jobs = None
+        for i in self.projects:
+            if self.projects[i]['ProjectName'] == pymol_object:
+                Jobs = self.projects[i]['Jobs']
+        
+        
+        #print Jobs
+        liststore = self.builder.get_object("liststore1")
+        self.WindowControl.AddJobHistoryToTreeview(liststore, Jobs)
+        #if true_or_false == False:
+        #    true_or_false = True
+        #    model.set(iter, 0, true_or_false)
+        #    # print true_or_false
+        #
+        #else:
+        #    true_or_false = False
+        #    model.set(iter, 0, true_or_false)
+        #    # print true_or_false
 
 
     def __init__(self):
@@ -105,6 +139,9 @@ class MastersMain():
         #---------------------------------------------------------------------------------#
 
         self.projects = {}
+        
+        
+        
         '''
         'title' : {'path' : None,
                    'type' : None, 
@@ -125,8 +162,8 @@ class MastersMain():
         
         
         # Dialogs
-        self.NewProjectDialog = NewProjectDialog(self.projects, self.builder)
-        
+        self.WindowControl    = WindowControl(self.builder, self.projects )
+        self.NewProjectDialog = NewProjectDialog(self.builder, self.projects,  self.WindowControl )
         
         
         

@@ -25,6 +25,8 @@ import os
 import gtk
 import time
 from pprint import pprint
+import json 
+
 
 AminoAcidDic = {'A':['Ala','HID','A'],
                 'R':['Arg','POL','B'],
@@ -50,6 +52,9 @@ AminoAcidDic = {'A':['Ala','HID','A'],
 
 def NewProject (project):
     """ Function doc """
+    LogWriter()
+     
+    
     pass
 
 
@@ -71,6 +76,7 @@ class NewProjectDialog():
         
         sequence2 = sequence.replace('\n', '')
         sequence2 = sequence2.replace(' ', '')
+        sequence2 = sequence2.upper()
         #print user, projectID, folder, sequence2
         
         
@@ -92,26 +98,33 @@ class NewProjectDialog():
                             'Sequence'    : sequence2,
                             'ABsequence'  : ABsequence,                
                             'ABmodel'     : AminoAcidDic,        
-                            'Generated'   : None,                
-                            'Modified'    : None,                
+                            'Generated'   : start,                
+                            'Modified'    : start,                
                             'Jobs'        : {                  
-                                             #1:{'path' : None,          #
-                                             #   'type' : None,          #
-                                             # 'energy' : None,          #  exemplo de como deve ser o dic jobs
-                                             #  'start' : None,          #
-                                             #    'end' : None }         #
+                                             1:{
+                                                 'Title' : 'teste com monte carlo',
+                                                'Folder' : 'None',          #
+                                                  'Type' : 'MonteCarlo',          #
+                                                'Energy' : '1233.554',          #  exemplo de como deve ser o dic jobs
+                                                 'Start' : 'ontem',          #
+                                                   'End' : 'hoje' }         #
                                             }
                             }
         
-        
+
         
         pprint (self.projects)
+        self.WindowControl.AddProjectHistoryToTreeview(liststore = self.main_builder.get_object('liststore2'))
         
+        
+        HOME   = os.environ.get('HOME')
+        FOLDER = HOME +'/.config/MASTERS/'
+        json.dump(self.projects, open(FOLDER + 'ProjectHistory.dat', 'w'), indent=2)
         
         # agora tem que criar a pasta do projeto com as info relevantes
         
             
-    def __init__(self, projects = None, main_builder=None):
+    def __init__(self, main_builder=None, projects = None, WindowControl = None):
         
         """ Class initialiser """
         
@@ -119,7 +132,6 @@ class NewProjectDialog():
         self.projects = projects
         if self.projects == None:
             self.projects = {}
-        
         self.builder = gtk.Builder()
         self.main_builder = main_builder
 
@@ -127,6 +139,7 @@ class NewProjectDialog():
             os.path.join('MastersNewProject.glade'))
         self.builder.connect_signals(self)
         self.dialog = self.builder.get_object('dialog1')
+        
 
         '''
 		--------------------------------------------------
@@ -136,7 +149,7 @@ class NewProjectDialog():
 		--------------------------------------------------
 		'''
         
-        #self.window_control = WindowControl(self.builder)
+        self.WindowControl = WindowControl
 
         #----------------- Setup ComboBoxes -------------------------#
         #combobox = '02_window_combobox_minimization_method'          #

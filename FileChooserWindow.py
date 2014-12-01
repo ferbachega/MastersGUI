@@ -19,10 +19,10 @@ class FileChooserWindow():
                                          gtk.STOCK_OPEN, gtk.RESPONSE_OK))
 
         filter = gtk.FileFilter()  # adiciona o filtro de busca de arquivos
-        filter.set_name("Master projects - *.master")
+        filter.set_name("Masters projects - *.masters")
         #
         filter.add_mime_type("Master projects")
-        filter.add_pattern("*.master")
+        filter.add_pattern("*.masters")
         #
         #chooser.add_filter(filter)
         #filter = gtk.FileFilter()

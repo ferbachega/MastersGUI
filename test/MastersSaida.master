@@ -1,14 +1,17 @@
-REMARK  ENERGY: -51.242
+REMARK  PROJECT_NAME:        sequeciaTeste
+REMARK  USER:                magrão
+REMARK  SEQUENCE:            TEWSTESSE
+REMARK  ENERGY:              -51.242
 REMARK  director-sleep-time: 5
-REMARK  temp_factor_dir: 0.5
-REMARK  temp_factor_search: 0.5
-REMARK  nr-of-directors: 1
-REMARK  limit_prob_dir: 1
-REMARK  limit_prob_search: 1
+REMARK  temp_factor_dir:     0.5
+REMARK  temp_factor_search:  0.5
+REMARK  nr-of-directors:     1
+REMARK  limit_prob_dir:      1
+REMARK  limit_prob_search:   1
 REMARK  attempted_threshold_with_dir: 500
 REMARK  t : 0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200
 REMARK  s : -913.5,-1978.0,-2218.2,-2333.0,-2391.8,-2435.1,-2486.4,-2543.0,-2571.7,-2598.6,-2616.9,-2631.6,-2648.0,-2661.7,-2675.6,-2686.3,-2696.9,-2708.6,-2718.7,-2726.3,-2732.5,-2737.8,-2742.3,-2745.2,-2748.8,-2752.1,-2754.5,-2756.9,-2758.8,-2760.5,-2762.7,-2764.4,-2765.9,-2767.7,-2770.2,-2772.6,-2775.0,-2776.9,-2779.0,-2781.4,-2783.7
-CRYST1  5.0  5.0  5.00  90.00  90.00 90 
+CRYST1  5.0  5.0  5.00  90.00  90.00 90.00 
 ATOM      0  CA  LEU     1     -12.955  -7.015  -10.861  1.00  1.00           B
 ATOM      1  CA  LEU     2     -12.341  -6.591  -10.195  1.00  1.00           B
 ATOM      2  CA  LEU     3     -12.726  -6.706  -9.28    1.00  1.00           B

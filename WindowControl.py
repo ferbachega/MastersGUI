@@ -65,15 +65,16 @@ class WindowControl():
 
     def AddProjectHistoryToTreeview (self, liststore=None , cell = None):
         model = liststore
-        #model = self.builder.get_object('liststore2')
+        model = self.builder.get_object('liststore3')
         model.clear()
         n = 0
+        
         for i in self.projects:
             cell = self.builder.get_object('cellrenderertext1')
             cell.props.weight_set = True
             cell.props.weight = pango.WEIGHT_NORMAL
             
-            data = [self.projects[i]['ProjectName'], self.projects[i]['Modified'], str(len(self.projects[1]['Jobs'])), self.projects[i]['User'] ]
+            data = [str(i), self.projects[i]['ProjectName'], self.projects[i]['Modified'], str(len(self.projects[i]['Jobs'])), self.projects[i]['User'] ]
             print i
             model.append(data)
             n = n + 1

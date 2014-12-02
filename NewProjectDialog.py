@@ -109,12 +109,14 @@ def GenerateInitialPDBCoordinates(sequence):
     n = 0
     recordname = 'ATOM'
     for i in sequence:
-        text = text + _ATOMLINEFORMAT1 % ( recordname, n, "CA", " ", AminoAcidDic[i][0].upper(), 'A', str(n), '',
-                                                                   initial_X_coord + n , 0, 0, 0.0, 0.0, '', 'C', " " )
+        #text = text + _ATOMLINEFORMAT1 % ( recordname, n, " CA", " ", AminoAcidDic[i][0].upper(), ' ', str(n), '',
+        #                                                           initial_X_coord + n , 0, 0, 0.0, 0.0, '', 'C', " " )
+        text = text + _ATOMLINEFORMAT1 % ( recordname, n, " CA", " ", AminoAcidDic[i][0].upper(), ' ', str(n + 1), '',
+                                                               initial_X_coord + n , 0, 0, 0.0, 0.0, '', 'C', " " )
         n = n +1
     return text
 
-def GeneratePDBtoProject(project, parameters = None):
+def GeneratePDBtoProject(project, parameters = None, filename = None):
     '''
     project{
                        'User'        : user     ,
@@ -138,7 +140,13 @@ def GeneratePDBtoProject(project, parameters = None):
     AminoAcidDic   = project['ABmodel'    ]
     start          = project['Generated'  ]       
     
-    arq  =  open(os.path.join(folder, 'InitialCoods.masters'), 'w')
+    print filename
+    
+    if filename == None:
+        filename  = os.path.join(folder, 'InitialCoords.masters')
+    
+    arq  =  open(filename, 'w')
+    
     text =          'REMARK      - - MASTERS PROJECT FILE - - '
     text = text + '\nREMARK'
     text = text + "\nREMARK  GENERATED:    " + start  
@@ -204,6 +212,10 @@ def GeneratePDBtoProject(project, parameters = None):
     text = str(text)
     arq.writelines(text)
     arq.close()
+    
+    return filename
+    
+    
         
 def GenerateRandomJob   (projects,parameters, random = False):
     """ Function doc """
@@ -248,12 +260,12 @@ def CreateNewProject (projects, parameters):
                         }
     HOME   = os.environ.get('HOME')
     FOLDER = HOME +'/.config/MASTERS/'
-    GeneratePDBtoProject(projects[index], parameters = None)
+    Filename = GeneratePDBtoProject(projects[index], parameters = None, filename = None)
     
     projects[index]['Jobs']['0'] = {
                                 'Title'  : 'Extended coordinates from AB sequence',
                                 'Folder' : folder, #
-                                'File'   : os.path.join(folder, 'InitialCoods.masters'),
+                                'File'   : os.path.join(Filename),
                                 'Type'   : 'Initial Coordinates', #
                                 'Energy' : '-', # exemplo de como deve ser o dic jobs
                                 'Start'  : start, #
@@ -273,10 +285,16 @@ class NewProjectDialog():
 
         sequence  = _buffer.get_text(*_buffer.get_bounds(), include_hidden_chars=False)
         add_info  = _buffer_infor.get_text(*_buffer_infor.get_bounds(), include_hidden_chars=False)
-        
+        sequence = sequence.replace('\n', '')
+        sequence = sequence.replace(' ', '')
+        sequence = sequence.replace('-', '')
+        sequence = sequence.replace('.', '')
+        sequence = sequence.replace(',', '')
+        sequence = sequence.upper()
+    
         if folder == None:
             self.builder.get_object('dialog1').hide()
-            self.builder.get_object('messagedialog1').format_secondary_text("A folder is requirede")
+            self.builder.get_object('messagedialog1').format_secondary_text("A folder is required")
             
             MessageDialog = self.builder.get_object('messagedialog1')
             #dialog.dialog.run()
@@ -289,16 +307,9 @@ class NewProjectDialog():
                                      # -6  -  Cancel   
             self.builder.get_object('dialog1').run()
 
-        sequence = sequence.replace('\n', '')
-        sequence = sequence.replace(' ', '')
-        sequence = sequence.replace('-', '')
-        sequence = sequence.replace('.', '')
-        sequence = sequence.replace(',', '')
-        sequence = sequence.upper()
-        
-        if sequence == '':
+        elif sequence == '':
             self.builder.get_object('dialog1').hide()
-            self.builder.get_object('messagedialog1').format_secondary_text("A sequence is requirede")
+            self.builder.get_object('messagedialog1').format_secondary_text("A sequence is required")
             
             MessageDialog = self.builder.get_object('messagedialog1')
             #dialog.dialog.run()
@@ -311,26 +322,26 @@ class NewProjectDialog():
                                      # -6  -  Cancel   
             self.builder.get_object('dialog1').run()
         
-        
-        parameters =   {'User'        : user     ,
-                        'ProjectName' : projectID,
-                        'Info'        : add_info ,
-                        'Folder'      : folder   ,
-                        'Sequence'    : sequence,
-                        'ABsequence'  : None,                
-                        'ABmodel'     : AminoAcidDic,        
-                        'Generated'   : None,                
-                        'Modified'    : None,                
-                        'Jobs'        : {}
-                        }
-        
-        """ Starting a new project """
-        
-        
-        CreateNewProject (self.projects, parameters)
-        
-        print self.projects
-        self.WindowControl.AddProjectHistoryToTreeview(liststore = self.main_builder.get_object('liststore2'))
+        else:
+            parameters =   {'User'        : user     ,
+                            'ProjectName' : projectID,
+                            'Info'        : add_info ,
+                            'Folder'      : folder   ,
+                            'Sequence'    : sequence,
+                            'ABsequence'  : None,                
+                            'ABmodel'     : AminoAcidDic,        
+                            'Generated'   : None,                
+                            'Modified'    : None,                
+                            'Jobs'        : {}
+                            }
+            
+            """ Starting a new project """
+            
+            
+            CreateNewProject (self.projects, parameters)
+            
+            print self.projects
+            self.WindowControl.AddProjectHistoryToTreeview(liststore = self.main_builder.get_object('liststore2'))
 
         
         

@@ -82,7 +82,7 @@ if not os.path.isdir(HOME +'/.config/MASTERS' ):
 
 
 
-
+'''
 global slab
 global clicado, ZeroX, ZeroY, Buffer, Zero_ViewBuffer, Menu
 slab            = 50
@@ -354,7 +354,7 @@ try:
 except:
     # Failed, so quit
     sys.exit(0)
-
+'''
 
 
 
@@ -493,6 +493,36 @@ class MastersMain():
         print button 
     
     
+    
+    #def on_treeviewcolumn11_clicked (self, column):
+    #    """ Function doc """
+    #    print 'gordo'
+    #
+    #def on_treeview3_button_press_event (self, tree, path, ):
+    #    """ Function doc """
+    #    """ Function doc """
+    #    model = tree.get_model()  # @+
+    #    iter  = model.get_iter(path)  # @+
+    #    JobID = model.get_value(iter, 0)  # @+
+    #    
+    #    
+    #    #print _object
+    #    print self.projects[self.active_project]['Jobs'][JobID]
+    #    filename = self.projects[self.active_project]['Jobs'][JobID]['File']
+    #    print filename          
+    
+    def on_treeview3_select_cursor_row (self, tree, path, column):
+        """ Function doc """
+        model = tree.get_model()  # @+
+        iter  = model.get_iter(path)  # @+
+        JobID = model.get_value(iter, 0)  # @+
+        
+        
+        #print _object
+        print self.projects[self.active_project]['Jobs'][JobID]
+        filename = self.projects[self.active_project]['Jobs'][JobID]['File']
+        print filename       
+    
     def on_treeview3_row_activated (self, tree, path, column):
         """ Function doc """
         model = tree.get_model()  # @+
@@ -504,7 +534,7 @@ class MastersMain():
         print self.projects[self.active_project]['Jobs'][JobID]
         filename = self.projects[self.active_project]['Jobs'][JobID]['File']
         print filename
-        self.OpenMasterFile(filename)
+        #self.OpenMasterFile(filename)
         
         
     def row_activated2(self, tree, path, column):
@@ -546,8 +576,10 @@ class MastersMain():
         
         HOME   = os.environ.get('HOME')
         FOLDER = HOME +'/.config/MASTERS/'
-        
-        self.projects       = json.load(open(FOLDER + 'ProjectHistory.dat'))
+        try:
+            self.projects       = json.load(open(FOLDER + 'ProjectHistory.dat'))
+        except:
+            self.projects       = {}
         self.active_project = None    
         
         '''
@@ -593,7 +625,7 @@ class MastersMain():
         
         
         
-        
+        '''
         container = self.builder.get_object("container")
         pymol.start()
         cmd = pymol.cmd
@@ -615,7 +647,7 @@ class MastersMain():
         cmd.set('label_distance_digits', label_distance_digits) #
         cmd.set('mesh_width', mesh_width)                       #
         cmd.set("retain_order")         # keep atom ordering    #
-        cmd.bg_color("grey")            # background color      #
+        #cmd.bg_color("grey")            # background color      #
         cmd.do("set field_of_view, 70")                         #
         cmd.do("set ray_shadows,off")                           #
                                                                 #
@@ -623,13 +655,13 @@ class MastersMain():
 
         cmd.set('ribbon_sampling', 3)                           #
         #-------------------------------------------------------#
-
+        '''
                                       
 
     def run(self):
         gtk.main()
 
-
+'''
 print "Creating object"
 glarea = gtk.gtkgl.DrawingArea(glconfig)
 glarea.set_size_request(600, 400)
@@ -649,11 +681,11 @@ import pymol2
 pymol   = pymol2.PyMOL(glarea)
 masters = MastersMain()
 glarea.connect_object("button_release_event", show_context_menu, context_menu())
-
+'''
 
 
 def main():
-    #masters = MastersMain()
+    masters = MastersMain()
     masters.run()
     return 0
 

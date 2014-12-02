@@ -68,8 +68,11 @@ class WindowControl():
         model = self.builder.get_object('liststore3')
         model.clear()
         n = 0
+
+        numbers = list(self.projects) # this is necessary to sorte the self.project dic
+        numbers = sorted(numbers)     # 
         
-        for i in self.projects:
+        for i in numbers:
             cell = self.builder.get_object('cellrenderertext1')
             cell.props.weight_set = True
             cell.props.weight = pango.WEIGHT_NORMAL
@@ -83,10 +86,14 @@ class WindowControl():
         model = self.builder.get_object('liststore1')
         model = liststore
 
+
+        numbers = list(Jobs)      # this is necessary to sorte the Jobs dic
+        numbers = sorted(numbers) # 
+
         model.clear()
         print model
         n = 0
-        for i in Jobs:
+        for i in numbers:
             #if cell is not None:
             #cell = self.builder.get_object('cellrenderertext1')
             #cell.props.weight_set = True

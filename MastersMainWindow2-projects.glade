@@ -2,6 +2,16 @@
 <interface>
   <requires lib="gtk+" version="2.24"/>
   <!-- interface-naming-policy project-wide -->
+  <object class="GtkImage" id="image1">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">icon_MC2.png</property>
+  </object>
+  <object class="GtkImage" id="image2">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">icon_New.png</property>
+  </object>
   <object class="GtkListStore" id="liststore1">
     <columns>
       <!-- column-name gchararray1 -->
@@ -220,7 +230,7 @@
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">Botao</property>
                 <property name="use_underline">True</property>
-                <property name="stock_id">gtk-new</property>
+                <property name="icon_widget">image2</property>
                 <signal name="clicked" handler="on_toolbutton_NewProject_clicked" swapped="no"/>
               </object>
               <packing>
@@ -328,13 +338,13 @@
               </packing>
             </child>
             <child>
-              <object class="GtkToolButton" id="toolbutton9">
+              <object class="GtkToolButton" id="toolbutton_MC">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">toolbutton9</property>
                 <property name="use_underline">True</property>
-                <property name="stock_id">gtk-media-play</property>
-                <signal name="clicked" handler="on_toolbutton9_clicked" swapped="no"/>
+                <property name="icon_widget">image1</property>
+                <signal name="clicked" handler="on_toolbutton_MC_clicked" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>

@@ -451,8 +451,6 @@ class MastersMain():
         #cmd.do('select resn ser')
         #cmd.do('color blue, sele')
         #cmd.do('show cell')
-
-
     def PlotData(self, x, y):
         """ Function doc """
         import gtk
@@ -479,6 +477,8 @@ class MastersMain():
         #y1 = np.cos(2 * np.pi * x1) * np.exp(-x1)
         y2 = np.cos(2 * np.pi * x2)
         
+        
+
         box = self.builder.get_object('vbox4')
         self.graph = box
 
@@ -501,7 +501,12 @@ class MastersMain():
         self.graph.pack_end(toolbar, False, False)
         self.graph.show_all()
 
-
+    def on_entry1_activate (self, widget):
+        """ Function doc """
+        command = self.builder.get_object('entry1').get_text()
+        print command
+        cmd.do(command)
+    
     def on_toolbutton_NewProject_clicked(self, button):
         """ Function doc """
         self.NewProjectDialog.dialog.run()
@@ -534,6 +539,10 @@ class MastersMain():
         """ Function doc """
         print "Box setup"        
 
+
+    def on_imagemenuitem6_activate (self, button):
+        """ Function doc """
+        
         
     def testGTKMatplotLib(self, button):
         """ Function doc """
@@ -644,6 +653,7 @@ class MastersMain():
         cmd.do('select resn ser')
         cmd.do('color blue, sele')
         
+        self.box = self.builder.get_object('vbox4')
         '''
         #----------------- Setup ComboBoxes -------------------------#
         #                                                            #
@@ -663,6 +673,13 @@ class MastersMain():
         #                                                                                                                            #
         #----------------------------------------------------------------------------------------------------------------------------#
         '''
+        #notebook = self.builder.get_object('notebook1')
+        #self.aba = self.builder.get_object('vpaned1')
+        #self.aba.show()
+        #label    = gtk.Label('bufferf')
+        #notebook.append_page(self.aba, label)
+        
+        
         
         #self.NewProjectDialog = NewProjectDialog()                                            
 

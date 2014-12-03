@@ -60,8 +60,9 @@ def from20letterToAB (sequence, AminoAcidDic ):
         ABsequence = ABsequence + AB
     
     return ABsequence
+
     
-def GenerateInitialPDBCoordinates(sequence):
+def GenerateInitialPDBCoordinates(text, sequence):
     """ Function doc 
 		
         
@@ -98,14 +99,13 @@ def GenerateInitialPDBCoordinates(sequence):
            
            
            #ATOM      0  CA  LEU     1     -12.955  -7.015  -10.861  1.00  1.00           B
-
+    text = text + '\n'
     size = float(len(sequence))
     initial_X_coord = -1*(size/2)
     
     _ATOMLINEFORMAT1    = "%-6s%5i %-4s%1s%3s %1s%4s%1s   %8.3f%8.3f%8.3f%6.2f%6.2f      %-4s%2s%2s\n"
     
-    text = ''
-    
+
     n = 0
     recordname = 'ATOM'
     for i in sequence:
@@ -115,6 +115,97 @@ def GenerateInitialPDBCoordinates(sequence):
                                                                initial_X_coord + n , 0, 0, 0.0, 0.0, '', 'C', " " )
         n = n +1
     return text
+
+
+def AddHeaderToText (text, project):
+    """ Function doc """
+    user           = project['User'       ]
+    projectID      = project['ProjectName']
+    add_info       = project['Info'       ]
+    folder         = project['Folder'     ]
+    sequence       = project['Sequence'   ]
+    ABsequence     = project['ABsequence' ]  
+    AminoAcidDic   = project['ABmodel'    ]
+    start          = project['Generated'  ]
+
+    text = text +   'REMARK      - - MASTERS PROJECT FILE - - '
+    text = text + '\nREMARK'
+    text = text + "\nREMARK  GENERATED:    " + start  
+    text = text + '\nREMARK  PROJECT_NAME: ' + projectID
+    text = text + '\nREMARK  USER:         ' + user
+    text = text + '\nREMARK'
+    return text
+
+def AddABModelToText (text, ABModel):
+    '''ABmodel to MASTERS PROJECT FILE'''
+    #--------------------------------------------------------------------------#
+    line = ''                                                                  #
+    text = text + '\nREMARK'                                                   #
+    text = text + '\nREMARK     - - AB model - - '                             #
+    n = 1                                                                      #
+                                                                               #
+    for i in ABModel:                                                          #
+        line =  line +  '\nREMARK  ABMODEL  ' + i + ':' + str(ABModel[i])      #
+    text = text + line                                                         #
+    return text
+    #--------------------------------------------------------------------------#
+
+def AddABSequenceToText(text, ABsequence):
+    #--------------------------------------------------------------------------#
+    text = text + '\nREMARK'                                                   #
+    text = text + '\nREMARK     - - protein ABsequence - - '                   #
+    line = '\nREMARK  ABSEQUEN:  '                                             #
+    n = 1                                                                      #
+    for i in ABsequence:                                                       #
+        if n >= 56:                                                            #
+            n = 1                                                              #
+            line =  line +  '\nREMARK  ABSEQUEN:  ' + i                        #
+        else:                                                                  #
+            line =  line + i                                                   #
+        n = n+1                                                                #
+    text = text + line                                                         #
+    text = text + '\nREMARK'                                                   #
+    return text                                                                #
+    #--------------------------------------------------------------------------# 
+
+def AddSequenceToText(text, sequence):
+    #--------------------------------------------------------------------------#
+    n = 1                                                                      #
+    text = text + '\nREMARK     - - protein sequence - one letter code - - '   #
+    line = '\nREMARK  SEQUENCE:  '                                             #
+    
+    for i in sequence:                                                         #
+        if n >= 56:                                                            #
+            n = 1                                                              #
+            line =  line +  '\nREMARK  SEQUENCE:  ' + i                        #
+        else:                                                                  #
+            line =  line + i                                                   #
+        n = n+1                                                                #
+    text = text + line                                                         #
+    return text
+    #--------------------------------------------------------------------------#    
+
+def AddCELLParametersToText (text,cell):
+    minX           = cell['minX']
+    maxX           = cell['maxX']
+    minY           = cell['minY']
+    maxY           = cell['maxY']
+    minZ           = cell['minZ']
+    maxZ           = cell['maxZ']
+
+    text = text + '\nREMARK          - -   - -   - - CELL MODEL - -   - -   - -'
+    text = text + '\nREMARK           -X       +X       -Y       +Y       -Z       +Z'
+    line = '\nREMARK  CELL %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f'% (minX,
+                                                                  maxX,
+                                                                  minY,
+                                                                  maxY,
+                                                                  minZ,
+                                                                  maxZ)
+
+    text = text + line                                                 
+    text = text + '\nREMARK'                                           
+    return text
+
 
 def GeneratePDBtoProject(project, parameters = None, filename = None):
     '''
@@ -139,84 +230,36 @@ def GeneratePDBtoProject(project, parameters = None, filename = None):
     ABsequence     = project['ABsequence' ]  
     AminoAcidDic   = project['ABmodel'    ]
     start          = project['Generated'  ]       
-    
-    print filename
+    cell           = project['Cell']
+
+    print filename  
     
     if filename == None:
         filename  = os.path.join(folder, 'InitialCoords.masters')
     
     arq  =  open(filename, 'w')
     
-    text =          'REMARK      - - MASTERS PROJECT FILE - - '
-    text = text + '\nREMARK'
-    text = text + "\nREMARK  GENERATED:    " + start  
-    text = text + '\nREMARK  PROJECT_NAME: ' + projectID
-    text = text + '\nREMARK  USER:         ' + user
-    text = text + '\nREMARK'
+    text = ''
+    
+    text = AddHeaderToText(text, project)                   # - Header
 
-    
-  
-    
-    '''Sequence to MASTERS PROJECT FILE'''
-    #--------------------------------------------------------------------------#
-    n = 1                                                                      #
-    text = text + '\nREMARK     - - protein sequence - one letter code - - '   #
-    line = '\nREMARK  SEQUENCE:  '                                             #
-    for i in sequence:                                                         #
-        if n >= 56:                                                            #
-            n = 1                                                              #
-            line =  line +  '\nREMARK  SEQUENCE:  ' + i                        #
-        else:                                                                  #
-            line =  line + i                                                   #
-        n = n+1                                                                #
-    text = text + line                                                         #
-    #--------------------------------------------------------------------------#
-    
+    text = AddABSequenceToText(text, sequence)              # - Sequence
 
+    text = AddABModelToText(text,AminoAcidDic )             # - ABModel
     
-    
-    '''ABmodel to MASTERS PROJECT FILE'''
-    #--------------------------------------------------------------------------#
-    line = ''                                                                  #
-    text = text + '\nREMARK'                                                   #
-    text = text + '\nREMARK     - - AB model - - '                             #
-    n = 1                                                                      #
-                                                                               #
-    for i in AminoAcidDic:                                                     #
-        line =  line +  '\nREMARK  ABMODEL  ' + i + ':' + str(AminoAcidDic[i]) #
-    text = text + line                                                         #
-    #--------------------------------------------------------------------------#
-   
-    
-    '''ABsequence to MASTERS PROJECT FILE'''
-    #--------------------------------------------------------------------------#
-    text = text + '\nREMARK'                                                   #
-    text = text + '\nREMARK     - - protein ABsequence - - '                   #
-    line = '\nREMARK  ABSEQUEN:  '                                             #
-    n = 1                                                                      #
-    for i in ABsequence:                                                       #
-        if n >= 56:                                                            #
-            n = 1                                                              #
-            line =  line +  '\nREMARK  ABSEQUEN:  ' + i                        #
-        else:                                                                  #
-            line =  line + i                                                   #
-        n = n+1                                                                #
-    text = text + line                                                         #
-    text = text + '\nREMARK'                                                   #
-    #--------------------------------------------------------------------------#
-    
-    text2 = GenerateInitialPDBCoordinates(sequence)
-    text = text + '\n' + text2
-    
+    text = AddABSequenceToText(text, ABsequence)            # - ABSequence
+
+    text = AddCELLParametersToText  (text, cell)            # - CELL
+
+    text = GenerateInitialPDBCoordinates(text, sequence)    # - Coordinates
 
     text = str(text)
     arq.writelines(text)
     arq.close()
     
     return filename
-    
-    
-        
+
+          
 def GenerateRandomJob   (projects,parameters, random = False):
     """ Function doc """
     Jobs ={
@@ -228,6 +271,7 @@ def GenerateRandomJob   (projects,parameters, random = False):
             'Start'  : 'ontem', #
             'End'    : 'hoje' } #
             }
+
                   
 def CreateNewProject (projects, parameters):
 
@@ -246,6 +290,17 @@ def CreateNewProject (projects, parameters):
     index      = str(len(projects) + 1)
     start      = time.asctime(time.localtime(time.time()))
     
+    #----------------------------CELL PARAMETERS-------------------------------#
+    size = float(len(sequence))                                                #
+    size = size + 10                                                           #
+    minX = -1*(size/2)                                                         #
+    minY = -7.0                                                                #
+    minZ = -7.0                                                                #
+    maxX =  (size/2)                                                           #
+    maxY =  7.0                                                                #
+    maxZ =  7.0                                                                #
+    #--------------------------------------------------------------------------#
+    
     projects[index] = {
                        'User'        : user     ,
                        'ProjectName' : projectID,
@@ -256,8 +311,15 @@ def CreateNewProject (projects, parameters):
                        'ABmodel'     : AminoAcidDic,        
                        'Generated'   : start,                
                        'Modified'    : start,                
+                       'Cell'        : {'minX' : minX,
+                                        'minY' : minY,
+                                        'minZ' : minZ,
+                                        'maxX' : maxX,
+                                        'maxY' : maxY,
+                                        'maxZ' : maxZ},
                        'Jobs'        : {}
                         }
+    
     HOME   = os.environ.get('HOME')
     FOLDER = HOME +'/.config/MASTERS/'
     Filename = GeneratePDBtoProject(projects[index], parameters = None, filename = None)
@@ -270,6 +332,7 @@ def CreateNewProject (projects, parameters):
                                 'Energy' : '-', # exemplo de como deve ser o dic jobs
                                 'Start'  : start, #
                                 'End'    : '  -  ' } #
+    
     json.dump(projects, open(FOLDER + 'ProjectHistory.dat', 'w'), indent=2)
 
 

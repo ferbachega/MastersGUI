@@ -624,6 +624,78 @@ class MCwindow:
     def  OpenNewFile(self, button):
         pass
     
+    
+    def DrawCell (self):
+        
+        """ Function doc """
+        
+        selection="(all)"
+        padding=0.0
+        linewidth=2.0
+        r=1.0
+        g=1.0
+        b=1.0
+        
+        minX = self.minX
+        minY = self.minY
+        minZ = self.minZ
+        maxX = self.maxX
+        maxY = self.maxY
+        maxZ = self.maxZ
+        
+        
+        
+        
+        boundingBox = [
+                LINEWIDTH, float(linewidth),
+
+                BEGIN, LINES,
+                COLOR, float(r), float(g), float(b),
+
+                VERTEX, minX, minY, minZ,       #1
+                VERTEX, minX, minY, maxZ,       #2
+
+                VERTEX, minX, maxY, minZ,       #3
+                VERTEX, minX, maxY, maxZ,       #4
+
+                VERTEX, maxX, minY, minZ,       #5
+                VERTEX, maxX, minY, maxZ,       #6
+
+                VERTEX, maxX, maxY, minZ,       #7
+                VERTEX, maxX, maxY, maxZ,       #8
+
+
+                VERTEX, minX, minY, minZ,       #1
+                VERTEX, maxX, minY, minZ,       #5
+
+                VERTEX, minX, maxY, minZ,       #3
+                VERTEX, maxX, maxY, minZ,       #7
+
+                VERTEX, minX, maxY, maxZ,       #4
+                VERTEX, maxX, maxY, maxZ,       #8
+
+                VERTEX, minX, minY, maxZ,       #2
+                VERTEX, maxX, minY, maxZ,       #6
+
+
+                VERTEX, minX, minY, minZ,       #1
+                VERTEX, minX, maxY, minZ,       #3
+
+                VERTEX, maxX, minY, minZ,       #5
+                VERTEX, maxX, maxY, minZ,       #7
+
+                VERTEX, minX, minY, maxZ,       #2
+                VERTEX, minX, maxY, maxZ,       #4
+
+                VERTEX, maxX, minY, maxZ,       #6
+                VERTEX, maxX, maxY, maxZ,       #8
+
+                END
+        ]
+        boxName = "box_1"
+        cmd.load_cgo(boundingBox,boxName)
+    
+    
     def OpenMasterFile (self, filename):
         """ Function doc """
         arq = open(filename, "r")
@@ -636,13 +708,25 @@ class MCwindow:
             
             try:
                 if line2[0] == 'REMARK':
+                    
                     print line
+                    
+                    
                     if line2[1] == "t":
                         t = line2[3].split(',')
                     elif line2[1] == "s":
                         s = line2[3].split(',')
                     else:
                         history.append(str(line[6:].replace('\n', '')))
+            
+                    
+                    if line2[1] == "CELL":
+                        self.minX = float(line2[2])
+                        self.maxX = float(line2[3])
+                        self.minY = float(line2[4])
+                        self.maxY = float(line2[5])
+                        self.minZ = float(line2[6])
+                        self.maxZ = float(line2[7])
             except:
                 pass
                
@@ -719,7 +803,7 @@ class MCwindow:
         
         cmd.do('select resn cys')
         cmd.do('color red, sele') 
-    
+        self.DrawCell()
     
     def OpenWindow (self, filename = None):
         """ Function doc """
@@ -817,6 +901,22 @@ class MCwindow:
         self.Visible    =  False
         
         
+        
+        # - - - CELL - - - #
+        self.minX = -10.0  #
+        self.minY = -10.0  #
+        self.minZ = -10.0  #
+        self.maxX =  10.0  #
+        self.maxY =  10.0  #
+        self.maxZ =  10.0  #
+        # - - - - - - - - -#
+
+
+
+
+
+
+
         #print '           Intializing MC MASTERS GUI object          '
         #self.home = os.environ.get('HOME')
         #

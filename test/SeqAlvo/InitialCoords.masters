@@ -31,7 +31,7 @@ REMARK  ABMODEL  Y:['Tyr', 'POL', 'B']
 REMARK
 REMARK     - - protein ABsequence - - 
 REMARK  ABSEQUEN:  BBBABBBBAAAABBBABAAA
-REMARK
+REMARK  CELL -20.00 -10.00 -10.00 20.00 10.00 10.00
 ATOM      0  CA  THR     1     -10.000   0.000   0.000  0.00  0.00           C  
 ATOM      1  CA  THR     2      -9.000   0.000   0.000  0.00  0.00           C  
 ATOM      2  CA  THR     3      -8.000   0.000   0.000  0.00  0.00           C  

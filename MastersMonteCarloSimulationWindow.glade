@@ -192,7 +192,6 @@
                 <property name="label" translatable="yes">toolbutton2</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-save-as</property>
-                <signal name="clicked" handler="on_toolbutton_LoadMasterProject_clicked" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -385,7 +384,7 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkEntry" id="entry1">
+                                  <object class="GtkEntry" id="entry_PyMOL_command">
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="invisible_char">•</property>
@@ -394,7 +393,7 @@
                                     <property name="secondary_icon_activatable">False</property>
                                     <property name="primary_icon_sensitive">True</property>
                                     <property name="secondary_icon_sensitive">True</property>
-                                    <signal name="activate" handler="on_entry1_activate" swapped="no"/>
+                                    <signal name="activate" handler="on_entry_PyMOL_command_activate" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="expand">True</property>

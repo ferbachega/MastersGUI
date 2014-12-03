@@ -212,8 +212,9 @@ class MastersMain():
         pprint (self.projects[self.active_project]['Jobs'][JobID])
         filename = self.projects[self.active_project]['Jobs'][JobID]['File']
         print filename
-        #self.OpenMasterFile(filename)
         
+        if self.MCwindow.Visible == False:
+            self.MCwindow.OpenWindow(filename)
         
     def row_activated2(self, tree, path, column):
 

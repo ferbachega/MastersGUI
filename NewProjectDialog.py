@@ -292,13 +292,13 @@ def CreateNewProject (projects, parameters):
     
     #----------------------------CELL PARAMETERS-------------------------------#
     size = float(len(sequence))                                                #
-    size = size + 10                                                           #
+    size = size + 14                                                           #
     minX = -1*(size/2)                                                         #
-    minY = -7.0                                                                #
-    minZ = -7.0                                                                #
+    minY = -20.0                                                               #
+    minZ = -20.0                                                               #
     maxX =  (size/2)                                                           #
-    maxY =  7.0                                                                #
-    maxZ =  7.0                                                                #
+    maxY =  20.0                                                               #
+    maxZ =  20.0                                                               #
     #--------------------------------------------------------------------------#
     
     projects[index] = {
@@ -327,7 +327,10 @@ def CreateNewProject (projects, parameters):
     projects[index]['Jobs']['0'] = {
                                 'Title'  : 'Extended coordinates from AB sequence',
                                 'Folder' : folder, #
-                                'File'   : os.path.join(Filename),
+                                #'File'   : os.path.join(Filename),
+                                'Input'  : '-',
+                                'Output' : os.path.join(Filename),
+                                'LogFile': '',
                                 'Type'   : 'Initial Coordinates', #
                                 'Energy' : '-', # exemplo de como deve ser o dic jobs
                                 'Start'  : start, #
@@ -398,8 +401,19 @@ class NewProjectDialog():
                             'Jobs'        : {}
                             }
             
-            """ Starting a new project """
-            
+            """ Starting a new project 
+                'Title'  : 'Testing MonteCarlos Sim',
+                'Folder' : folder,                
+                'Input'  : filename_in,
+                'Output' : filename_out,
+                'LogFile': ''          , 
+                'Type'   : 'MonteCarlo', 
+                'Energy' : str(rdm.random()*1.2345),                   
+                'Start'  : '  -  ',                 
+                'End'    : '  -  ' } 
+            """
+
+
             
             CreateNewProject (self.projects, parameters)
             

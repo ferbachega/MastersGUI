@@ -198,7 +198,7 @@ class MastersMain():
     def on_toolbutton_MC_clicked(self, button):
         """ Function doc """
         if self.MCwindow.Visible == False:
-            self.MCwindow.OpenWindow()
+            self.MCwindow.OpenWindow(ActivedProject =self.ActivedProject)
 
 
     def on_treeview3_row_activated (self, tree, path, column):
@@ -209,12 +209,12 @@ class MastersMain():
         
         
         #print _object
-        pprint (self.projects[self.active_project]['Jobs'][JobID])
-        filename = self.projects[self.active_project]['Jobs'][JobID]['File']
+        pprint (self.projects[self.ActivedProject]['Jobs'][JobID])
+        filename = self.projects[self.ActivedProject]['Jobs'][JobID]['Output']
         print filename
         
         if self.MCwindow.Visible == False:
-            self.MCwindow.OpenWindow(filename)
+            self.MCwindow.OpenWindow(ActivedProject = self.ActivedProject)
         
     def row_activated2(self, tree, path, column):
 
@@ -222,7 +222,7 @@ class MastersMain():
         iter = model.get_iter(path)  # @+
         
         projectID           = model.get_value(iter, 0)  # @+
-        self.active_project = projectID
+        self.ActivedProject = projectID
         
         Jobs   = self.projects[projectID]['Jobs']
         Folder = self.projects[projectID]['Folder']
@@ -237,8 +237,8 @@ class MastersMain():
         
         text = 'Project: ' + self.projects[projectID]['ProjectName'] + '    Folder:' + Folder
         self.WindowControl.STATUSBAR_SET_TEXT(text)
-        print self.active_project
-
+        print self.ActivedProject
+        self.MCwindow.ActivedProject = self.ActivedProject
 
     def __init__(self):
         print '           Intializing MasterGUI object          '
@@ -259,16 +259,8 @@ class MastersMain():
             self.projects       = json.load(open(FOLDER + 'ProjectHistory.dat'))
         except:
             self.projects       = {}
-        self.active_project = None    
+        self.ActivedProject = None    
         
-        '''
-        'title' : {'path' : None,
-                   'type' : None, 
-              'generated' : None, 
-               'modified' : None } 
-        '''                
-
-
         
         '''
         #-----------------------------------------------#
@@ -282,8 +274,8 @@ class MastersMain():
         
         # Dialogs
         self.WindowControl    = WindowControl   (self.builder, self.projects )
-        self.NewProjectDialog = NewProjectDialog(self.builder, self.projects,  self.WindowControl )
-        self.MCwindow         = MCwindow        (self.builder,self.projects, self.WindowControl)                                                         
+        self.NewProjectDialog = NewProjectDialog(self.builder, self.projects, self.WindowControl )
+        self.MCwindow         = MCwindow        (self.builder, self.projects, self.ActivedProject, self.WindowControl)                                                         
         
         #pprint(self.projects)
         #

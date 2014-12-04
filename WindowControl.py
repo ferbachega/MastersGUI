@@ -69,14 +69,19 @@ class WindowControl():
         model.clear()
         n = 0
 
-        numbers = list(self.projects) # this is necessary to sorte the self.project dic
-        numbers = sorted(numbers)     # 
+        numbers  = list(self.projects) # this is necessary to sorte the self.project dic
+        #numbers = sorted(numbers)     # 
+        numbers2 = []
         
         for i in numbers:
+            numbers2.append(int(i))
+        numbers2.sort()
+        
+        for i in numbers2:
             cell = self.builder.get_object('cellrenderertext1')
             cell.props.weight_set = True
             cell.props.weight = pango.WEIGHT_NORMAL
-            
+            i = str(i)
             data = [str(i), self.projects[i]['ProjectName'], self.projects[i]['Modified'], str(len(self.projects[i]['Jobs'])), self.projects[i]['User'] ]
             print i
             model.append(data)
@@ -88,16 +93,23 @@ class WindowControl():
 
 
         numbers = list(Jobs)      # this is necessary to sorte the Jobs dic
-        numbers = sorted(numbers) # 
+        #numbers = sorted(numbers)     # 
+        numbers2 = []
+        
+        for i in numbers:
+            numbers2.append(int(i))
+        numbers2.sort()
 
         model.clear()
         print model
         n = 0
-        for i in numbers:
+        for i in numbers2:
+            i = str(i)
             #if cell is not None:
             #cell = self.builder.get_object('cellrenderertext1')
             #cell.props.weight_set = True
             #cell.props.weight = pango.WEIGHT_NORMAL
+            i = str(i)
             data = [str(i), Jobs[i]['Type'],Jobs[i]['Start'],Jobs[i]['End'],Jobs[i]['Energy'],Jobs[i]['Title'] ]
             print i, data
             model.append(data)

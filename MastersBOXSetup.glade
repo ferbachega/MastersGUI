@@ -151,7 +151,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSpinButton" id="spinbutton1">
+                          <object class="GtkSpinButton" id="spinbutton_minX">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="invisible_char">●</property>
@@ -159,6 +159,7 @@
                             <property name="secondary_icon_activatable">False</property>
                             <property name="primary_icon_sensitive">True</property>
                             <property name="secondary_icon_sensitive">True</property>
+                            <signal name="activate" handler="on_spinbutton_change_value" swapped="no"/>
                           </object>
                           <packing>
                             <property name="left_attach">1</property>
@@ -166,7 +167,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSpinButton" id="spinbutton2">
+                          <object class="GtkSpinButton" id="spinbutton_minY">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="invisible_char">●</property>
@@ -174,6 +175,7 @@
                             <property name="secondary_icon_activatable">False</property>
                             <property name="primary_icon_sensitive">True</property>
                             <property name="secondary_icon_sensitive">True</property>
+                            <signal name="activate" handler="on_spinbutton_change_value" swapped="no"/>
                           </object>
                           <packing>
                             <property name="left_attach">1</property>
@@ -183,7 +185,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSpinButton" id="spinbutton3">
+                          <object class="GtkSpinButton" id="spinbutton_minZ">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="invisible_char">●</property>
@@ -191,6 +193,7 @@
                             <property name="secondary_icon_activatable">False</property>
                             <property name="primary_icon_sensitive">True</property>
                             <property name="secondary_icon_sensitive">True</property>
+                            <signal name="change-value" handler="on_spinbutton_change_value" swapped="no"/>
                           </object>
                           <packing>
                             <property name="left_attach">1</property>
@@ -200,7 +203,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSpinButton" id="spinbutton4">
+                          <object class="GtkSpinButton" id="spinbutton_maxX">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="invisible_char">●</property>
@@ -208,6 +211,7 @@
                             <property name="secondary_icon_activatable">False</property>
                             <property name="primary_icon_sensitive">True</property>
                             <property name="secondary_icon_sensitive">True</property>
+                            <signal name="change-value" handler="on_spinbutton_change_value" swapped="no"/>
                           </object>
                           <packing>
                             <property name="left_attach">3</property>
@@ -215,7 +219,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSpinButton" id="spinbutton5">
+                          <object class="GtkSpinButton" id="spinbutton_maxY">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="invisible_char">●</property>
@@ -223,6 +227,7 @@
                             <property name="secondary_icon_activatable">False</property>
                             <property name="primary_icon_sensitive">True</property>
                             <property name="secondary_icon_sensitive">True</property>
+                            <signal name="change-value" handler="on_spinbutton_change_value" swapped="no"/>
                           </object>
                           <packing>
                             <property name="left_attach">3</property>
@@ -232,7 +237,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSpinButton" id="spinbutton6">
+                          <object class="GtkSpinButton" id="spinbutton_maxZ">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="invisible_char">●</property>
@@ -240,6 +245,7 @@
                             <property name="secondary_icon_activatable">False</property>
                             <property name="primary_icon_sensitive">True</property>
                             <property name="secondary_icon_sensitive">True</property>
+                            <signal name="change-value" handler="on_spinbutton_change_value" swapped="no"/>
                           </object>
                           <packing>
                             <property name="left_attach">3</property>

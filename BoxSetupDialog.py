@@ -323,6 +323,94 @@ glconfig = gtk.gdkgl.Config(mode=(gtk.gdkgl.MODE_RGB |
 class BoxSetupDialog:
     """ Class doc """
 
+    def on_spinbutton_change_value(self, widget):
+        """ Function doc """
+        print 'teste'
+        self.DrawCell()
+
+
+    def DrawCell (self):
+        pass
+        """ Function doc """
+        
+        selection="(all)"
+        padding=0.0
+        linewidth=2.0
+        r=1.0
+        g=1.0
+        b=1.0
+        
+        minX  = self.builder.get_object("spinbutton_minX").get_value_as_int()
+        minY  = self.builder.get_object("spinbutton_minY").get_value_as_int()
+        minZ  = self.builder.get_object("spinbutton_minZ").get_value_as_int()
+        maxX  = self.builder.get_object("spinbutton_maxX").get_value_as_int()
+        maxY  = self.builder.get_object("spinbutton_maxY").get_value_as_int()
+        maxZ  = self.builder.get_object("spinbutton_maxZ").get_value_as_int()
+        
+        #minX = self.minX
+        #minY = self.minY
+        #minZ = self.minZ
+        #maxX = self.maxX
+        #maxY = self.maxY
+        #maxZ = self.maxZ
+        
+
+        boundingBox = [
+                LINEWIDTH, float(linewidth),
+
+                BEGIN, LINES,
+                COLOR, float(r), float(g), float(b),
+
+                VERTEX, minX, minY, minZ,       #1
+                VERTEX, minX, minY, maxZ,       #2
+
+                VERTEX, minX, maxY, minZ,       #3
+                VERTEX, minX, maxY, maxZ,       #4
+
+                VERTEX, maxX, minY, minZ,       #5
+                VERTEX, maxX, minY, maxZ,       #6
+
+                VERTEX, maxX, maxY, minZ,       #7
+                VERTEX, maxX, maxY, maxZ,       #8
+
+
+                VERTEX, minX, minY, minZ,       #1
+                VERTEX, maxX, minY, minZ,       #5
+
+                VERTEX, minX, maxY, minZ,       #3
+                VERTEX, maxX, maxY, minZ,       #7
+
+                VERTEX, minX, maxY, maxZ,       #4
+                VERTEX, maxX, maxY, maxZ,       #8
+
+                VERTEX, minX, minY, maxZ,       #2
+                VERTEX, maxX, minY, maxZ,       #6
+
+
+                VERTEX, minX, minY, minZ,       #1
+                VERTEX, minX, maxY, minZ,       #3
+
+                VERTEX, maxX, minY, minZ,       #5
+                VERTEX, maxX, maxY, minZ,       #7
+
+                VERTEX, minX, minY, maxZ,       #2
+                VERTEX, minX, maxY, maxZ,       #4
+
+                VERTEX, maxX, minY, maxZ,       #6
+                VERTEX, maxX, maxY, maxZ,       #8
+
+                END
+        ]
+        
+        try:
+            cmd.delete("box_1")
+        except:
+            pass
+        
+        boxName = "box_1"
+        cmd.set('auto_zoom', 0)
+        cmd.load_cgo(boundingBox,boxName)
+        #cmd.set_frame(-1)
     def __init__(self, project=None, window_control=None, main_builder=None):
         """ Class initialiser """
         self.project = project
@@ -331,8 +419,8 @@ class BoxSetupDialog:
         self.main_builder = main_builder
 
         self.builder.add_from_file('MastersBOXSetup.glade')
-        self.builder.connect_signals(self)
         self.dialog = self.builder.get_object('dialog1')
+        self.builder.connect_signals(self)
 
         '''
 		--------------------------------------------------
@@ -343,15 +431,67 @@ class BoxSetupDialog:
 		'''
         
         
+        if project == None:
+            project= {'Cell' : {'minX' : -10.0,
+                                'minY' : -10.0,
+                                'minZ' : -10.0,
+                                'maxX' :  10.0,
+                                'maxY' :  10.0,
+                                'maxZ' :  10.0}
+                                }
         
+        self.minX = project['Cell']['minX']
+        self.minY = project['Cell']['minY']
+        self.minZ = project['Cell']['minZ']
+        self.maxX = project['Cell']['maxX']
+        self.maxY = project['Cell']['maxY']
+        self.maxZ = project['Cell']['maxZ']
         
+        print self.minX
+        print self.minY
+        print self.minZ
+        print self.maxX
+        print self.maxY
+        print self.maxZ
         
+
+        adjustment1 = gtk.Adjustment(0.0, -1000.0, 1000.0, 1.0, 0.0, 0.0)
+        self.spinbutton_minX  = self.builder.get_object("spinbutton_minX")
+        self.spinbutton_minX.set_adjustment(adjustment1)
+        self.spinbutton_minX.update()
+        self.spinbutton_minX.set_value(int(project['Cell']['minX']))
+
+        adjustment2 = gtk.Adjustment(0.0, -1000.0, 1000.0, 1.0, 0.0, 0.0)
+        self.spinbutton_minY  = self.builder.get_object("spinbutton_minY")
+        self.spinbutton_minY.set_adjustment(adjustment2)
+        self.spinbutton_minY.update()
+        self.spinbutton_minY.set_value(int(project['Cell']['minY']))
+
+        adjustment3 = gtk.Adjustment(0.0, -1000.0, 1000.0, 1.0, 0.0, 0.0)
+        self.spinbutton_minZ  = self.builder.get_object("spinbutton_minZ")
+        self.spinbutton_minZ.set_adjustment(adjustment3)
+        self.spinbutton_minZ.update()
+        self.spinbutton_minZ.set_value(int(project['Cell']['minZ']))
         
-        
-        
-        
-        
-        
+        adjustment4 = gtk.Adjustment(0.0, -1000.0, 1000.0, 1.0, 0.0, 0.0)
+        self.spinbutton_maxX  = self.builder.get_object("spinbutton_maxX")
+        self.spinbutton_maxX.set_adjustment(adjustment4)
+        self.spinbutton_maxX.update()
+        self.spinbutton_maxX.set_value(int(project['Cell']['maxX']))
+
+        adjustment5 = gtk.Adjustment(0.0, -1000.0, 1000.0, 1.0, 0.0, 0.0)
+        self.spinbutton_maxY  = self.builder.get_object("spinbutton_maxY")
+        self.spinbutton_maxY.set_adjustment(adjustment5)
+        self.spinbutton_maxY.update()
+        self.spinbutton_maxY.set_value(int(project['Cell']['maxY']))
+
+        adjustment6 = gtk.Adjustment(0.0, -1000.0, 1000.0, 1.0, 0.0, 0.0)
+        self.spinbutton_maxZ  = self.builder.get_object("spinbutton_maxZ")
+        self.spinbutton_maxZ.set_adjustment(adjustment5)
+        self.spinbutton_maxZ.update()
+        self.spinbutton_maxZ.set_value(int(project['Cell']['maxZ'])) 
+
+
         #-------------------- config PyMOL ---------------------#
                                                                 #
         container = self.builder.get_object("container")        #
@@ -362,7 +502,6 @@ class BoxSetupDialog:
                                                                 #
         #-------------------------------------------------------#
 
-        
         
         #-------------------- config PyMOL ---------------------#
         #                                                       #
@@ -386,15 +525,8 @@ class BoxSetupDialog:
                                                                 #
                                                                 #
         cmd.set('ribbon_sampling', 3)                           #
-        
-       
-        #self.window_control = WindowControl(self.builder)
+        self.DrawCell()
 
-        #----------------- Setup ComboBoxes -------------------------#
-        #combobox = '02_window_combobox_minimization_method'          #
-        #combolist = ["Conjugate Gradient", "Steepest Descent", "LBFGS"]
-        #self.window_control.SETUP_COMBOBOXES(combobox, combolist, 0)
-        #------------------------------------------------------------#
 
 
 

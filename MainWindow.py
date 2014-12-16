@@ -597,7 +597,7 @@ class MastersMain():
         #                                                                                                    #
         #                                                                                                    #
         self.builder = gtk.Builder()                                                                         #
-        self.builder.add_from_file("/home/labio/Documents/MASTERS/MastersMonteCarloSimulationWindow.glade")  #
+        self.builder.add_from_file("MastersMainWindow.glade")  #
         #                                                                                                    #
         self.win = self.builder.get_object("window1")                                                        #
         #                                                                                                    #

@@ -1,0 +1,58 @@
+REMARK      - - MASTERS PROJECT FILE - - 
+REMARK
+REMARK  GENERATED:    Tue Dec  2 10:36:36 2014
+REMARK  PROJECT_NAME: Test3
+REMARK  USER:         Michele
+REMARK
+REMARK     - - protein sequence - one letter code - - 
+REMARK  SEQUENCE:  LPATVKGIMDSWLPATVKGIMDSW
+REMARK
+REMARK     - - AB model - - 
+REMARK  ABMODEL  A:['Ala', 'HID', 'A']
+REMARK  ABMODEL  C:['Cys', 'HID', 'A']
+REMARK  ABMODEL  E:['Glu', 'POL', 'B']
+REMARK  ABMODEL  D:['Asp', 'POL', 'B']
+REMARK  ABMODEL  G:['Gly', 'HID', 'A']
+REMARK  ABMODEL  F:['Phe', 'POL', 'B']
+REMARK  ABMODEL  I:['Ile', 'HID', 'A']
+REMARK  ABMODEL  H:['His', 'POL', 'B']
+REMARK  ABMODEL  K:['Lys', 'POL', 'B']
+REMARK  ABMODEL  M:['Met', 'HID', 'A']
+REMARK  ABMODEL  L:['Leu', 'HID', 'A']
+REMARK  ABMODEL  N:['Asn', 'POL', 'B']
+REMARK  ABMODEL  Q:['Gln', 'POL', 'B']
+REMARK  ABMODEL  P:['Pro', 'HID', 'A']
+REMARK  ABMODEL  S:['Ser', 'POL', 'B']
+REMARK  ABMODEL  R:['Arg', 'POL', 'B']
+REMARK  ABMODEL  T:['Thr', 'POL', 'B']
+REMARK  ABMODEL  W:['Trp', 'POL', 'B']
+REMARK  ABMODEL  V:['Val', 'HID', 'A']
+REMARK  ABMODEL  Y:['Tyr', 'POL', 'B']
+REMARK
+REMARK     - - protein ABsequence - - 
+REMARK  ABSEQUEN:  AAABABAAABBBAAABABAAABBB
+REMARK
+ATOM      0  CA  LEU     1     -12.000   0.000   0.000  0.00  0.00           C  
+ATOM      1  CA  PRO     2     -11.000   0.000   0.000  0.00  0.00           C  
+ATOM      2  CA  ALA     3     -10.000   0.000   0.000  0.00  0.00           C  
+ATOM      3  CA  THR     4      -9.000   0.000   0.000  0.00  0.00           C  
+ATOM      4  CA  VAL     5      -8.000   0.000   0.000  0.00  0.00           C  
+ATOM      5  CA  LYS     6      -7.000   0.000   0.000  0.00  0.00           C  
+ATOM      6  CA  GLY     7      -6.000   0.000   0.000  0.00  0.00           C  
+ATOM      7  CA  ILE     8      -5.000   0.000   0.000  0.00  0.00           C  
+ATOM      8  CA  MET     9      -4.000   0.000   0.000  0.00  0.00           C  
+ATOM      9  CA  ASP    10      -3.000   0.000   0.000  0.00  0.00           C  
+ATOM     10  CA  SER    11      -2.000   0.000   0.000  0.00  0.00           C  
+ATOM     11  CA  TRP    12      -1.000   0.000   0.000  0.00  0.00           C  
+ATOM     12  CA  LEU    13       0.000   0.000   0.000  0.00  0.00           C  
+ATOM     13  CA  PRO    14       1.000   0.000   0.000  0.00  0.00           C  
+ATOM     14  CA  ALA    15       2.000   0.000   0.000  0.00  0.00           C  
+ATOM     15  CA  THR    16       3.000   0.000   0.000  0.00  0.00           C  
+ATOM     16  CA  VAL    17       4.000   0.000   0.000  0.00  0.00           C  
+ATOM     17  CA  LYS    18       5.000   0.000   0.000  0.00  0.00           C  
+ATOM     18  CA  GLY    19       6.000   0.000   0.000  0.00  0.00           C  
+ATOM     19  CA  ILE    20       7.000   0.000   0.000  0.00  0.00           C  
+ATOM     20  CA  MET    21       8.000   0.000   0.000  0.00  0.00           C  
+ATOM     21  CA  ASP    22       9.000   0.000   0.000  0.00  0.00           C  
+ATOM     22  CA  SER    23      10.000   0.000   0.000  0.00  0.00           C  
+ATOM     23  CA  TRP    24      11.000   0.000   0.000  0.00  0.00           C  

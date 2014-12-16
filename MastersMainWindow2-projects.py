@@ -40,16 +40,17 @@ import math
 import os
 import json
 from  pprint import pprint
+import pango
 # Imports
 #from OpenGL.GL import *
 #from OpenGL.GLU import *
 
 #GUI
-from FileChooserWindow    import *
-from NewProjectDialog     import NewProjectDialog
-from WindowControl        import WindowControl
-from MCwindow             import MCwindow
-
+from FileChooserWindow      import *
+from NewProjectDialog       import NewProjectDialog
+from WindowControl          import WindowControl
+from MCwindow               import MCwindow
+from MastersWorkSpaceDialog import WorkSpaceDialog
 # Imports
 from OpenGL.GL import *
 from OpenGL.GLU import *
@@ -201,6 +202,44 @@ class MastersMain():
             self.MCwindow.OpenWindow(ActivedProject =self.ActivedProject)
 
 
+    
+    
+    def  on_treeview3_button_release_event(self, tree, event):
+        """ Function doc """
+        if event.button == 3:
+            #print "Mostrar menu de contexto botao3"
+            selection     = tree.get_selection()
+            model         = tree.get_model()
+            (model, iter) = selection.get_selected()
+            
+            if iter != None:
+                self.selectedID  = str(model.get_value(iter, 1))
+                self.selectedObj = str(model.get_value(iter, 2))
+                #self.builder.get_object('TreeViewObjLabel').set_label('- ' +self.selectedObj+' -' )
+                
+                #widget = self.builder.get_object('treeview_menu')
+                #widget.popup(None, None, None, event.button, event.time)
+            
+        if event.button == 1:
+            #print "Mostrar menu de contexto botao1"
+            selection     = tree.get_selection()
+            model         = tree.get_model()
+            (model, iter) = selection.get_selected()
+            
+            if iter != None:
+                #print model, iter
+                JobID         = model.get_value(iter, 0)
+                pymol_object  = model.get_value(iter, 2)  # @+
+                #print _object
+                #pprint (self.projects[self.ActivedProject]['Jobs'][JobID])
+                filename = self.projects[self.ActivedProject]['Jobs'][JobID]['Output']
+                #print filename
+                self.load_file(filename)
+                
+
+
+
+
     def on_treeview3_row_activated (self, tree, path, column):
         """ Function doc """
         model = tree.get_model()  # @+
@@ -210,12 +249,45 @@ class MastersMain():
         
         #print _object
         pprint (self.projects[self.ActivedProject]['Jobs'][JobID])
+        
         filename = self.projects[self.ActivedProject]['Jobs'][JobID]['Output']
-        print filename
+        #print filename
+        #pprint (self.projects)
+        MCwindow (self)
+        #self.load_file(filename)
+        #
+        #
+        #if self.MCwindow.Visible == False:
+        #    self.MCwindow.OpenWindow(ActivedProject = self.ActivedProject)
+
+
+    def load_file(self, filename):
+    
+        ## add Loading message to status bar and ensure GUI is current
+        #self.statusbar.push(self.statusbar_cid, "Loading %s" % filename)
+        #while gtk.events_pending(): gtk.main_iteration()
+        #
+        #try:
+        # get the file contents
+        fin = open(filename, "r")
+        text = fin.read()
+        fin.close()
         
-        if self.MCwindow.Visible == False:
-            self.MCwindow.OpenWindow(ActivedProject = self.ActivedProject)
+        # disable the text view while loading the buffer with the text
+        self.text_view.set_sensitive(False)
+        buff = self.text_view.get_buffer()
+        buff.set_text(text)
+        buff.set_modified(False)
+        self.text_view.set_sensitive(True)
         
+        # now we can set the current filename since loading was a success
+        #self.filename = filename
+    
+    
+    
+    
+    
+    
     def row_activated2(self, tree, path, column):
 
         model = tree.get_model()  # @+
@@ -227,39 +299,97 @@ class MastersMain():
         Jobs   = self.projects[projectID]['Jobs']
         Folder = self.projects[projectID]['Folder']
         
-        print Jobs
+        #print Jobs
         liststore = self.builder.get_object("liststore1")
         
         try:
             self.WindowControl.AddJobHistoryToTreeview(liststore, Jobs)
+            #MCwindow = MCwindow  (self.builder, self.projects, self.ActivedProject, self.WindowControl)
         except:
             pass
         
-        text = 'Project: ' + self.projects[projectID]['ProjectName'] + '    Folder:' + Folder
+        text = 'Project: ' + self.projects[projectID]['ProjectName'] + '    Directory:' + Folder
         self.WindowControl.STATUSBAR_SET_TEXT(text)
         print self.ActivedProject
-        self.MCwindow.ActivedProject = self.ActivedProject
+        #self.MCwindow.ActivedProject = self.ActivedProject
+        
+        buff = self.text_view.get_buffer()
+        buff.set_text('')
+        buff.set_modified(False)
+        
+        
 
+
+    
+    def Save_GUI_ConfigFile(self):
+        """ Function doc """
+        path = os.path.join(self.home,'.config')
+        if not os.path.exists (path): 
+            os.mkdir (path)
+
+        path = os.path.join(path, 'MASTERS')
+        if not os.path.exists (path): 
+            os.mkdir (path)
+        
+        filename = os.path.join(path,'GUI.config')
+        json.dump(self.GUIConfig, open(filename, 'w'), indent=2)
+        
+    
+    def Load_GUI_ConfigFile (self, filename = None):
+        """ Function doc """
+        #.config
+        path = os.path.join(self.home,'.config', 'MASTERS', 'GUI.config')
+        
+        try:
+            self.GUIConfig = json.load(open(path)) 
+        except:
+            print 'error: GUIConfig file not found'
+            print 'open WorkSpace Dialog'
+        
+        
     def __init__(self):
         print '           Intializing MasterGUI object          '
         self.home = os.environ.get('HOME')
+        
         #---------------------------------- MasterGUI ------------------------------------#
         self.builder = gtk.Builder()                                                      #
         self.builder.add_from_file("MastersMainWindow2-projects.glade")                   #
         self.win     = self.builder.get_object("window1")                                 #
         self.win.show()                                                                   #
         self.builder.connect_signals(self)                                                #
+        #self.statusbar = builder.get_object("statusbar")
+        self.text_view = self.builder.get_object("textview1")
+        self.text_view.modify_font(pango.FontDescription("monospace 10"))
         #---------------------------------------------------------------------------------#
 
         self.projects = {}
         
+        self.selectedID  = None
+        self.selectedObj = None    
+        
         HOME   = os.environ.get('HOME')
-        FOLDER = HOME +'/.config/MASTERS/'
+        FOLDER = os.path.join(HOME, '.config/MASTERS/')
         try:
             self.projects       = json.load(open(FOLDER + 'ProjectHistory.dat'))
         except:
             self.projects       = {}
+        
         self.ActivedProject = None    
+        
+        
+        
+        
+        
+        #---------------------------------------------------------#
+        #                  MASTERS GUI CONFIG                     #
+        #---------------------------------------------------------#
+        self.GUIConfig = {                              
+                       'HideWorkSpaceDialog': False,  
+                       'WorkSpace'          : HOME,  
+                       'History'            : {}   } 
+        self.Load_GUI_ConfigFile()
+        #---------------------------------------------------------#
+
         
         
         '''
@@ -272,24 +402,22 @@ class MastersMain():
         '''
         
         
-        # Dialogs
-        self.WindowControl    = WindowControl   (self.builder, self.projects )
-        self.NewProjectDialog = NewProjectDialog(self.builder, self.projects, self.WindowControl )
-        self.MCwindow         = MCwindow        (self.builder, self.projects, self.ActivedProject, self.WindowControl)                                                         
-        
-        #pprint(self.projects)
-        #
-        #for i in self.projects:
-        #    i = int(i)
-        #    #data = [self.projects[i]['ProjectName'], self.projects[i]['Modified'], str(len(self.projects[1]['Jobs'])), self.projects[i]['User'] ]
-        #    #print data
-        #    ##model.append(data)        
-        #
-        #pprint(self.projects)
+        #---------------------------------------Dialogs and Windows-----------------------------------------------------#
+        self.WindowControl    = WindowControl   (self.builder, self.projects )                                          #
+        self.NewProjectDialog = NewProjectDialog(self)#.builder, self.projects, self.WindowControl, self.GUIConfig )    #
+        #self.MCwindow         = MCwindow        (self.builder, self.projects, self.ActivedProject, self.WindowControl)  #                                                   
+        self.WorkSpaceDialog  = WorkSpaceDialog (self)                                                                  #
+        #---------------------------------------------------------------------------------------------------------------#
 
-        
+     
         self.WindowControl.AddProjectHistoryToTreeview(liststore = self.builder.get_object('liststore2'))                
-
+        
+        if self.GUIConfig['HideWorkSpaceDialog'] == False:
+            self.WorkSpaceDialog.dialog.run()
+            self.WorkSpaceDialog.dialog.hide()
+            
+            
+            
     def run(self):
         gtk.main()
 

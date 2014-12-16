@@ -5,7 +5,42 @@
   <object class="GtkImage" id="image1">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="pixbuf">icon_Run.png</property>
+    <property name="pixbuf">run.png</property>
+  </object>
+  <object class="GtkImage" id="image2">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">restraints.png</property>
+  </object>
+  <object class="GtkImage" id="image3">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">NewFile.png</property>
+  </object>
+  <object class="GtkImage" id="image4">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">save.png</property>
+  </object>
+  <object class="GtkImage" id="image5">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">icon_CellSetup.png</property>
+  </object>
+  <object class="GtkImage" id="image6">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">deleteSystem.png</property>
+  </object>
+  <object class="GtkListStore" id="liststore1">
+    <columns>
+      <!-- column-name file -->
+      <column type="gchararray"/>
+      <!-- column-name format -->
+      <column type="gchararray"/>
+      <!-- column-name datatype -->
+      <column type="gchararray"/>
+    </columns>
   </object>
   <object class="GtkWindow" id="window1">
     <property name="can_focus">False</property>
@@ -184,7 +219,7 @@
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">toolbutton1</property>
                 <property name="use_underline">True</property>
-                <property name="stock_id">gtk-save</property>
+                <property name="icon_widget">image3</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -197,7 +232,7 @@
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">toolbutton2</property>
                 <property name="use_underline">True</property>
-                <property name="stock_id">gtk-save-as</property>
+                <property name="icon_widget">image4</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -215,6 +250,42 @@
               </packing>
             </child>
             <child>
+              <object class="GtkToolButton" id="toolbutton6">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">toolbutton6</property>
+                <property name="use_underline">True</property>
+                <property name="icon_widget">image5</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="toolbutton5">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">toolbutton5</property>
+                <property name="use_underline">True</property>
+                <property name="icon_widget">image2</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSeparatorToolItem" id="toolbutton8">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
               <object class="GtkToolButton" id="toolbutton4">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
@@ -222,6 +293,19 @@
                 <property name="use_underline">True</property>
                 <property name="icon_widget">image1</property>
                 <signal name="clicked" handler="RunMCSimulationButton" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="toolbutton7">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">toolbutton7</property>
+                <property name="use_underline">True</property>
+                <property name="icon_widget">image6</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -265,17 +349,39 @@
                           <object class="GtkTreeView" id="treeview1">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="model"/>
+                            <property name="model">liststore1</property>
                             <property name="headers_clickable">False</property>
                             <property name="rules_hint">True</property>
                             <property name="search_column">0</property>
                             <child>
                               <object class="GtkTreeViewColumn" id="treeviewcolumn1">
-                                <property name="title" translatable="yes">column</property>
+                                <property name="title" translatable="yes">File</property>
                                 <child>
                                   <object class="GtkCellRendererText" id="cellrenderertext1"/>
                                   <attributes>
                                     <attribute name="text">0</attribute>
+                                  </attributes>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkTreeViewColumn" id="treeviewcolumn2">
+                                <property name="title" translatable="yes">Format</property>
+                                <child>
+                                  <object class="GtkCellRendererText" id="cellrenderertext2"/>
+                                  <attributes>
+                                    <attribute name="text">1</attribute>
+                                  </attributes>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkTreeViewColumn" id="treeviewcolumn3">
+                                <property name="title" translatable="yes">Data type</property>
+                                <child>
+                                  <object class="GtkCellRendererText" id="cellrenderertext3"/>
+                                  <attributes>
+                                    <attribute name="text">2</attribute>
                                   </attributes>
                                 </child>
                               </object>

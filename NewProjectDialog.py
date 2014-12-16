@@ -341,14 +341,42 @@ def CreateNewProject (projects, parameters):
 
 class NewProjectDialog():
     
+    """ Class doc """
+    def on_new_project_entry_changed (self, entry):
+        """ Function doc """
+        text      = self.builder.get_object("new_project_entry").get_text()
+        WorkSpace = self.MASTERSSession.GUIConfig['WorkSpace']
+        path      = os.path.join(WorkSpace, text)
+        print  text
+        self.builder.get_object("project_directory_entry").set_text(path)
+    
+    
+    
+    
+    
     def CreateNewProject_button (self, button):
         """ Function doc """
         user          =  self.builder.get_object('user_entry').get_text()
         projectID     =  self.builder.get_object('new_project_entry').get_text()
-        folder        =  self.builder.get_object('filechooserbutton1').get_filename()
+        #folder        =  self.builder.get_object('filechooserbutton1').get_filename()
+        folder        =  self.builder.get_object('project_directory_entry').get_text()
         _buffer       =  self.builder.get_object('textview1').get_buffer()
         _buffer_infor =  self.builder.get_object('textview2').get_buffer()
 
+
+
+        folder2 = folder.split('/')
+        path = '/'
+        for i in folder2:
+            path = os.path.join(path, i)
+            if not os.path.exists (path): 
+                os.mkdir (path)
+        
+        
+        
+        
+        
+        
         sequence  = _buffer.get_text(*_buffer.get_bounds(), include_hidden_chars=False)
         add_info  = _buffer_infor.get_text(*_buffer_infor.get_bounds(), include_hidden_chars=False)
         sequence = sequence.replace('\n', '')
@@ -423,23 +451,46 @@ class NewProjectDialog():
         
         
             
-    def __init__(self, main_builder=None, projects = None, WindowControl = None):
+    def __init__(self,MASTERSSession): #main_builder=None, projects = None, WindowControl = None, GUIConfig = None):
         
         """ Class initialiser """
         
-        
-        self.projects = projects
+        self.MASTERSSession   =  MASTERSSession
+        self.projects         =  MASTERSSession.projects
+        login                 =  os.getlogin()
         if self.projects == None:
             self.projects = {}
+        
         self.builder = gtk.Builder()
-        self.main_builder = main_builder
+        
+        self.main_builder = MASTERSSession.builder
 
         self.builder.add_from_file(
             os.path.join('MastersNewProject.glade'))
         self.builder.connect_signals(self)
-        self.dialog = self.builder.get_object('dialog1')
         
+        self.dialog    = self.builder.get_object('dialog1')
+        self.GUIConfig = MASTERSSession.GUIConfig
+        
+        
+        
+        localtime = time.asctime(time.localtime(time.time()))
+        print "Local current time :", localtime
+        localtime = localtime.split()
 
+        #  0     1    2       3         4
+        #[Sun] [Sep] [28] [02:32:04] [2014]
+        text = login + '_project_' + localtime[1] + \
+            '_' + localtime[2] + '_' + localtime[4]
+        self.builder.get_object("new_project_entry").set_text(text)
+        self.builder.get_object("user_entry").set_text(login)
+        
+        
+        
+        if self.GUIConfig  != None:
+            self.builder.get_object('project_directory_entry').set_text(self.GUIConfig['WorkSpace'])
+        
+        
         '''
 		--------------------------------------------------
 		-                                                -
@@ -448,7 +499,7 @@ class NewProjectDialog():
 		--------------------------------------------------
 		'''
         
-        self.WindowControl = WindowControl
+        self.WindowControl = MASTERSSession.WindowControl
 
         #----------------- Setup ComboBoxes -------------------------#
         #combobox = '02_window_combobox_minimization_method'          #

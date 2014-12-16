@@ -1,0 +1,78 @@
+REMARK      - - MASTERS PROJECT FILE - - 
+REMARK
+REMARK  GENERATED:    Thu Dec  4 16:22:01 2014
+REMARK  PROJECT_NAME: sequencia do Magrão
+REMARK  USER:         Magrão
+REMARK
+REMARK
+REMARK     - - protein ABsequence - - 
+REMARK  ABSEQUEN:  GVPINVSCTGSPQCIKPCKDQGMRFGKCMNRKCHCTPK
+REMARK
+REMARK
+REMARK     - - AB model - - 
+REMARK  ABMODEL  A:['Ala', 'HID', 'A']
+REMARK  ABMODEL  C:['Cys', 'HID', 'A']
+REMARK  ABMODEL  E:['Glu', 'POL', 'B']
+REMARK  ABMODEL  D:['Asp', 'POL', 'B']
+REMARK  ABMODEL  G:['Gly', 'HID', 'A']
+REMARK  ABMODEL  F:['Phe', 'POL', 'B']
+REMARK  ABMODEL  I:['Ile', 'HID', 'A']
+REMARK  ABMODEL  H:['His', 'POL', 'B']
+REMARK  ABMODEL  K:['Lys', 'POL', 'B']
+REMARK  ABMODEL  M:['Met', 'HID', 'A']
+REMARK  ABMODEL  L:['Leu', 'HID', 'A']
+REMARK  ABMODEL  N:['Asn', 'POL', 'B']
+REMARK  ABMODEL  Q:['Gln', 'POL', 'B']
+REMARK  ABMODEL  P:['Pro', 'HID', 'A']
+REMARK  ABMODEL  S:['Ser', 'POL', 'B']
+REMARK  ABMODEL  R:['Arg', 'POL', 'B']
+REMARK  ABMODEL  T:['Thr', 'POL', 'B']
+REMARK  ABMODEL  W:['Trp', 'POL', 'B']
+REMARK  ABMODEL  V:['Val', 'HID', 'A']
+REMARK  ABMODEL  Y:['Tyr', 'POL', 'B']
+REMARK
+REMARK     - - protein ABsequence - - 
+REMARK  ABSEQUEN:  AAAABABABABABAABAABBBAABBABAABBBABABAB
+REMARK
+REMARK          - -   - -   - - CELL MODEL - -   - -   - -
+REMARK           -X       +X       -Y       +Y       -Z       +Z
+REMARK  CELL  -26.000   26.000  -20.000   20.000  -20.000   20.000
+REMARK
+ATOM      0  CA  GLY     1     -19.000   0.000   0.000  0.00  0.00           C  
+ATOM      1  CA  VAL     2     -18.000   0.000   0.000  0.00  0.00           C  
+ATOM      2  CA  PRO     3     -17.000   0.000   0.000  0.00  0.00           C  
+ATOM      3  CA  ILE     4     -16.000   0.000   0.000  0.00  0.00           C  
+ATOM      4  CA  ASN     5     -15.000   0.000   0.000  0.00  0.00           C  
+ATOM      5  CA  VAL     6     -14.000   0.000   0.000  0.00  0.00           C  
+ATOM      6  CA  SER     7     -13.000   0.000   0.000  0.00  0.00           C  
+ATOM      7  CA  CYS     8     -12.000   0.000   0.000  0.00  0.00           C  
+ATOM      8  CA  THR     9     -11.000   0.000   0.000  0.00  0.00           C  
+ATOM      9  CA  GLY    10     -10.000   0.000   0.000  0.00  0.00           C  
+ATOM     10  CA  SER    11      -9.000   0.000   0.000  0.00  0.00           C  
+ATOM     11  CA  PRO    12      -8.000   0.000   0.000  0.00  0.00           C  
+ATOM     12  CA  GLN    13      -7.000   0.000   0.000  0.00  0.00           C  
+ATOM     13  CA  CYS    14      -6.000   0.000   0.000  0.00  0.00           C  
+ATOM     14  CA  ILE    15      -5.000   0.000   0.000  0.00  0.00           C  
+ATOM     15  CA  LYS    16      -4.000   0.000   0.000  0.00  0.00           C  
+ATOM     16  CA  PRO    17      -3.000   0.000   0.000  0.00  0.00           C  
+ATOM     17  CA  CYS    18      -2.000   0.000   0.000  0.00  0.00           C  
+ATOM     18  CA  LYS    19      -1.000   0.000   0.000  0.00  0.00           C  
+ATOM     19  CA  ASP    20       0.000   0.000   0.000  0.00  0.00           C  
+ATOM     20  CA  GLN    21       1.000   0.000   0.000  0.00  0.00           C  
+ATOM     21  CA  GLY    22       2.000   0.000   0.000  0.00  0.00           C  
+ATOM     22  CA  MET    23       3.000   0.000   0.000  0.00  0.00           C  
+ATOM     23  CA  ARG    24       4.000   0.000   0.000  0.00  0.00           C  
+ATOM     24  CA  PHE    25       5.000   0.000   0.000  0.00  0.00           C  
+ATOM     25  CA  GLY    26       6.000   0.000   0.000  0.00  0.00           C  
+ATOM     26  CA  LYS    27       7.000   0.000   0.000  0.00  0.00           C  
+ATOM     27  CA  CYS    28       8.000   0.000   0.000  0.00  0.00           C  
+ATOM     28  CA  MET    29       9.000   0.000   0.000  0.00  0.00           C  
+ATOM     29  CA  ASN    30      10.000   0.000   0.000  0.00  0.00           C  
+ATOM     30  CA  ARG    31      11.000   0.000   0.000  0.00  0.00           C  
+ATOM     31  CA  LYS    32      12.000   0.000   0.000  0.00  0.00           C  
+ATOM     32  CA  CYS    33      13.000   0.000   0.000  0.00  0.00           C  
+ATOM     33  CA  HIS    34      14.000   0.000   0.000  0.00  0.00           C  
+ATOM     34  CA  CYS    35      15.000   0.000   0.000  0.00  0.00           C  
+ATOM     35  CA  THR    36      16.000   0.000   0.000  0.00  0.00           C  
+ATOM     36  CA  PRO    37      17.000   0.000   0.000  0.00  0.00           C  
+ATOM     37  CA  LYS    38      18.000   0.000   0.000  0.00  0.00           C  

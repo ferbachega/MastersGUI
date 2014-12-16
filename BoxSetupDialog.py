@@ -524,9 +524,39 @@ class BoxSetupDialog:
                                                                 #
                                                                 #
                                                                 #
+        
         cmd.set('ribbon_sampling', 3)                           #
         self.DrawCell()
-
+        
+        
+        cmd.load('/home/labio/Documents/MASTERS/test/MastersSaida.masters')                            #
+        cmd.show("spheres")                                     #
+        cmd.hide('lines')
+        cmd.show('ribbon')                                      #
+        cmd.color('blue')
+        cmd.do('select resn leu')
+        cmd.do('color red, sele')
+        
+        cmd.do('select resn ala')
+        cmd.do('color red, sele')
+        
+        cmd.do('select resn ile')
+        cmd.do('color red, sele')
+        
+        cmd.do('select resn pro')
+        cmd.do('color red, sele')
+        
+        cmd.do('select resn val')
+        cmd.do('color red, sele')
+        
+        cmd.do('select resn met')
+        cmd.do('color red, sele')
+        
+        cmd.do('select resn gly')
+        cmd.do('color red, sele')
+        
+        cmd.do('select resn cys')
+        cmd.do('color red, sele') 
 
 
 

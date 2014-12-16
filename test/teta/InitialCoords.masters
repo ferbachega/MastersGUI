@@ -1,0 +1,48 @@
+REMARK      - - MASTERS PROJECT FILE - - 
+REMARK
+REMARK  GENERATED:    Wed Dec  3 13:53:28 2014
+REMARK  PROJECT_NAME: nada
+REMARK  USER:         Magraum - teta
+REMARK
+REMARK     - - protein sequence - one letter code - - 
+REMARK  SEQUENCE:  SADSSASDASDA
+REMARK
+REMARK     - - AB model - - 
+REMARK  ABMODEL  A:['Ala', 'HID', 'A']
+REMARK  ABMODEL  C:['Cys', 'HID', 'A']
+REMARK  ABMODEL  E:['Glu', 'POL', 'B']
+REMARK  ABMODEL  D:['Asp', 'POL', 'B']
+REMARK  ABMODEL  G:['Gly', 'HID', 'A']
+REMARK  ABMODEL  F:['Phe', 'POL', 'B']
+REMARK  ABMODEL  I:['Ile', 'HID', 'A']
+REMARK  ABMODEL  H:['His', 'POL', 'B']
+REMARK  ABMODEL  K:['Lys', 'POL', 'B']
+REMARK  ABMODEL  M:['Met', 'HID', 'A']
+REMARK  ABMODEL  L:['Leu', 'HID', 'A']
+REMARK  ABMODEL  N:['Asn', 'POL', 'B']
+REMARK  ABMODEL  Q:['Gln', 'POL', 'B']
+REMARK  ABMODEL  P:['Pro', 'HID', 'A']
+REMARK  ABMODEL  S:['Ser', 'POL', 'B']
+REMARK  ABMODEL  R:['Arg', 'POL', 'B']
+REMARK  ABMODEL  T:['Thr', 'POL', 'B']
+REMARK  ABMODEL  W:['Trp', 'POL', 'B']
+REMARK  ABMODEL  V:['Val', 'HID', 'A']
+REMARK  ABMODEL  Y:['Tyr', 'POL', 'B']
+REMARK
+REMARK     - - protein ABsequence - - 
+REMARK  ABSEQUEN:  BABBBABBABBA
+REMARK
+REMARK  CELL  -11.000   -7.000   -7.000   11.000    7.000    7.000
+REMARK
+ATOM      0  CA  SER     1      -6.000   0.000   0.000  0.00  0.00           C  
+ATOM      1  CA  ALA     2      -5.000   0.000   0.000  0.00  0.00           C  
+ATOM      2  CA  ASP     3      -4.000   0.000   0.000  0.00  0.00           C  
+ATOM      3  CA  SER     4      -3.000   0.000   0.000  0.00  0.00           C  
+ATOM      4  CA  SER     5      -2.000   0.000   0.000  0.00  0.00           C  
+ATOM      5  CA  ALA     6      -1.000   0.000   0.000  0.00  0.00           C  
+ATOM      6  CA  SER     7       0.000   0.000   0.000  0.00  0.00           C  
+ATOM      7  CA  ASP     8       1.000   0.000   0.000  0.00  0.00           C  
+ATOM      8  CA  ALA     9       2.000   0.000   0.000  0.00  0.00           C  
+ATOM      9  CA  SER    10       3.000   0.000   0.000  0.00  0.00           C  
+ATOM     10  CA  ASP    11       4.000   0.000   0.000  0.00  0.00           C  
+ATOM     11  CA  ALA    12       5.000   0.000   0.000  0.00  0.00           C  

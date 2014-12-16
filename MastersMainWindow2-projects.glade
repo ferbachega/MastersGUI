@@ -509,6 +509,7 @@
                             <property name="search_column">0</property>
                             <signal name="button-press-event" handler="on_treeview3_button_press_event" swapped="no"/>
                             <signal name="row-activated" handler="on_treeview3_row_activated" swapped="no"/>
+                            <signal name="button-release-event" handler="on_treeview3_button_release_event" swapped="no"/>
                             <child>
                               <object class="GtkTreeViewColumn" id="treeviewcolumn10">
                                 <property name="title" translatable="yes">ID</property>
@@ -609,6 +610,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="editable">False</property>
+                            <property name="left_margin">10</property>
                           </object>
                         </child>
                       </object>

@@ -3,6 +3,7 @@
   <requires lib="gtk+" version="2.24"/>
   <!-- interface-naming-policy project-wide -->
   <object class="GtkDialog" id="dialog1">
+    <property name="width_request">550</property>
     <property name="can_focus">False</property>
     <property name="border_width">5</property>
     <property name="type_hint">dialog</property>
@@ -59,7 +60,7 @@
               <object class="GtkLabel" id="label2">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Please choose a simple project ID and project directory. The directory should not overlap with previously defined project directory. GTKDynamo will store settings and files specific to this project.</property>
+                <property name="label" translatable="yes">Please choose a simple project ID and project directory. The directory should not overlap with previously defined project directory. MASTERS will store settings and files specific to this project.</property>
                 <property name="wrap">True</property>
               </object>
               <packing>
@@ -91,6 +92,10 @@
                         <property name="xalign">1</property>
                         <property name="label" translatable="yes">User:</property>
                       </object>
+                      <packing>
+                        <property name="x_options">GTK_FILL</property>
+                        <property name="y_options">GTK_FILL</property>
+                      </packing>
                     </child>
                     <child>
                       <object class="GtkEntry" id="user_entry">
@@ -110,19 +115,6 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkFileChooserButton" id="filechooserbutton1">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="action">select-folder</property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">1</property>
-                        <property name="right_attach">2</property>
-                        <property name="top_attach">2</property>
-                        <property name="bottom_attach">3</property>
-                      </packing>
-                    </child>
-                    <child>
                       <object class="GtkLabel" id="project_directory">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
@@ -133,6 +125,8 @@
                       <packing>
                         <property name="top_attach">2</property>
                         <property name="bottom_attach">3</property>
+                        <property name="x_options">GTK_FILL</property>
+                        <property name="y_options">GTK_FILL</property>
                       </packing>
                     </child>
                     <child>
@@ -145,6 +139,8 @@
                       <packing>
                         <property name="top_attach">1</property>
                         <property name="bottom_attach">2</property>
+                        <property name="x_options">GTK_FILL</property>
+                        <property name="y_options">GTK_FILL</property>
                       </packing>
                     </child>
                     <child>
@@ -158,12 +154,32 @@
                         <property name="secondary_icon_activatable">False</property>
                         <property name="primary_icon_sensitive">True</property>
                         <property name="secondary_icon_sensitive">True</property>
+                        <signal name="changed" handler="on_new_project_entry_changed" swapped="no"/>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
                         <property name="right_attach">2</property>
                         <property name="top_attach">1</property>
                         <property name="bottom_attach">2</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkEntry" id="project_directory_entry">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="invisible_char">●</property>
+                        <property name="invisible_char_set">True</property>
+                        <property name="primary_icon_activatable">False</property>
+                        <property name="secondary_icon_activatable">False</property>
+                        <property name="primary_icon_sensitive">True</property>
+                        <property name="secondary_icon_sensitive">True</property>
+                        <signal name="changed" handler="on_new_project_entry_changed" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="right_attach">2</property>
+                        <property name="top_attach">2</property>
+                        <property name="bottom_attach">3</property>
                       </packing>
                     </child>
                   </object>

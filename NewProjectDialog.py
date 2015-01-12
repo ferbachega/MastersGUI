@@ -350,10 +350,6 @@ class NewProjectDialog():
         print  text
         self.builder.get_object("project_directory_entry").set_text(path)
     
-    
-    
-    
-    
     def CreateNewProject_button (self, button):
         """ Function doc """
         user          =  self.builder.get_object('user_entry').get_text()
@@ -448,10 +444,7 @@ class NewProjectDialog():
             print self.projects
             self.WindowControl.AddProjectHistoryToTreeview(liststore = self.main_builder.get_object('liststore2'))
 
-        
-        
-            
-    def __init__(self,MASTERSSession): #main_builder=None, projects = None, WindowControl = None, GUIConfig = None):
+    def __init__(self, MASTERSSession = None): #main_builder=None, projects = None, WindowControl = None, GUIConfig = None):
         
         """ Class initialiser """
         

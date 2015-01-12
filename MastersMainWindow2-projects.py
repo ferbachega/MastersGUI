@@ -198,15 +198,16 @@ class MastersMain():
     
     def on_toolbutton_MC_clicked(self, button):
         """ Function doc """
-        if self.MCwindow.Visible == False:
-            self.MCwindow.OpenWindow(ActivedProject =self.ActivedProject)
-
+        #if self.MCwindow.Visible == False:
+        #    self.MCwindow.OpenWindow(ActivedProject =self.ActivedProject)
+        MCwindow (self)
 
     
     
-    def  on_treeview3_button_release_event(self, tree, event):
+    def on_treeview3_button_release_event(self, tree, event):
         """ Function doc """
         if event.button == 3:
+            #print 'button3'
             #print "Mostrar menu de contexto botao3"
             selection     = tree.get_selection()
             model         = tree.get_model()
@@ -215,10 +216,10 @@ class MastersMain():
             if iter != None:
                 self.selectedID  = str(model.get_value(iter, 1))
                 self.selectedObj = str(model.get_value(iter, 2))
+
                 #self.builder.get_object('TreeViewObjLabel').set_label('- ' +self.selectedObj+' -' )
-                
-                #widget = self.builder.get_object('treeview_menu')
-                #widget.popup(None, None, None, event.button, event.time)
+                widget = self.builder.get_object('treeview_menu')
+                widget.popup(None, None, None, event.button, event.time)
             
         if event.button == 1:
             #print "Mostrar menu de contexto botao1"

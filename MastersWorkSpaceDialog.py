@@ -87,7 +87,7 @@ class WorkSpaceDialog():
         
         
         
-        path   = os.path.join(self.HOME, 'MastersWorkSpace')
+        path   = os.path.join(self.HOME, 'MastersWorkspace')
         self.builder.get_object('workspace_entry').set_text(path)
         
         #-----------  FileChooserWindow  -------------#

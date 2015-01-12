@@ -362,8 +362,7 @@ class MastersMain():
 
 
         dialog = BoxSetupDialog(filein = filename)
-        dialog.dialog.run()
-        dialog.dialog.hide()
+
 
 
     def __init__(self):

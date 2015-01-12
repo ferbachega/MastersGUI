@@ -40,22 +40,217 @@
           </packing>
         </child>
         <child>
-          <object class="GtkVPaned" id="vpaned1">
+          <placeholder/>
+        </child>
+      </object>
+    </child>
+    <action-widgets>
+      <action-widget response="0">button1</action-widget>
+    </action-widgets>
+  </object>
+  <object class="GtkWindow" id="window1">
+    <property name="can_focus">False</property>
+    <signal name="destroy-event" handler="on_window1_destroy_event" swapped="no"/>
+    <signal name="delete-event" handler="on_window1_delete_event" swapped="no"/>
+    <child>
+      <object class="GtkVPaned" id="vpaned1">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <child>
+          <object class="GtkVBox" id="container">
+            <property name="width_request">500</property>
+            <property name="height_request">500</property>
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
+            <property name="can_focus">False</property>
             <child>
-              <object class="GtkVBox" id="container">
-                <property name="width_request">500</property>
-                <property name="height_request">500</property>
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="resize">False</property>
+            <property name="shrink">True</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkVBox" id="vbox1">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="spacing">10</property>
+            <child>
+              <object class="GtkVBox" id="19_window_vbox2">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <child>
-                  <placeholder/>
+                  <object class="GtkHScale" id="trajectory_hscale">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="round_digits">1</property>
+                    <signal name="change-value" handler="on_TrajectoryTool_BarSetFrame" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkAlignment" id="19_window_alignment4">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="top_padding">8</property>
+                    <child>
+                      <object class="GtkHBox" id="19_window_hbox1">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <child>
+                          <object class="GtkLabel" id="19_window_min_label1">
+                            <property name="width_request">61</property>
+                            <property name="height_request">30</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="label" translatable="yes">Min:</property>
+                            <property name="single_line_mode">True</property>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkEntry" id="trajectory_min_entrey">
+                            <property name="width_request">50</property>
+                            <property name="height_request">30</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="invisible_char">●</property>
+                            <property name="text" translatable="yes">1</property>
+                            <property name="invisible_char_set">True</property>
+                            <property name="primary_icon_activatable">False</property>
+                            <property name="secondary_icon_activatable">False</property>
+                            <property name="primary_icon_sensitive">True</property>
+                            <property name="secondary_icon_sensitive">True</property>
+                            <signal name="activate" handler="on_TrajectoryTool_Entry_Push" swapped="no"/>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="19_window_max_label1">
+                            <property name="width_request">51</property>
+                            <property name="height_request">30</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="label" translatable="yes">Max:</property>
+                            <property name="single_line_mode">True</property>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkEntry" id="trajectory_max_entrey">
+                            <property name="width_request">50</property>
+                            <property name="height_request">30</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="invisible_char">●</property>
+                            <property name="text" translatable="yes">100</property>
+                            <property name="invisible_char_set">True</property>
+                            <property name="primary_icon_activatable">False</property>
+                            <property name="secondary_icon_activatable">False</property>
+                            <property name="primary_icon_sensitive">True</property>
+                            <property name="secondary_icon_sensitive">True</property>
+                            <signal name="activate" handler="on_TrajectoryTool_Entry_Push" swapped="no"/>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">3</property>
+                          </packing>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkHBox" id="hbox4">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <child>
+                      <object class="GtkButton" id="button2">
+                        <property name="label" translatable="yes">R</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="button3">
+                        <property name="label" translatable="yes">S</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="button4">
+                        <property name="label" translatable="yes">P</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">2</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="button6">
+                        <property name="label" translatable="yes">F</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">3</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">2</property>
+                  </packing>
                 </child>
               </object>
               <packing>
-                <property name="resize">False</property>
-                <property name="shrink">True</property>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
               </packing>
             </child>
             <child>
@@ -159,7 +354,7 @@
                             <property name="secondary_icon_activatable">False</property>
                             <property name="primary_icon_sensitive">True</property>
                             <property name="secondary_icon_sensitive">True</property>
-                            <signal name="activate" handler="on_spinbutton_change_value" swapped="no"/>
+                            <signal name="value-changed" handler="on_spinbutton_change_value2" swapped="no"/>
                           </object>
                           <packing>
                             <property name="left_attach">1</property>
@@ -176,6 +371,7 @@
                             <property name="primary_icon_sensitive">True</property>
                             <property name="secondary_icon_sensitive">True</property>
                             <signal name="activate" handler="on_spinbutton_change_value" swapped="no"/>
+                            <signal name="value-changed" handler="on_spinbutton_change_value2" swapped="no"/>
                           </object>
                           <packing>
                             <property name="left_attach">1</property>
@@ -194,6 +390,7 @@
                             <property name="primary_icon_sensitive">True</property>
                             <property name="secondary_icon_sensitive">True</property>
                             <signal name="change-value" handler="on_spinbutton_change_value" swapped="no"/>
+                            <signal name="value-changed" handler="on_spinbutton_change_value2" swapped="no"/>
                           </object>
                           <packing>
                             <property name="left_attach">1</property>
@@ -211,7 +408,7 @@
                             <property name="secondary_icon_activatable">False</property>
                             <property name="primary_icon_sensitive">True</property>
                             <property name="secondary_icon_sensitive">True</property>
-                            <signal name="change-value" handler="on_spinbutton_change_value" swapped="no"/>
+                            <signal name="value-changed" handler="on_spinbutton_change_value2" swapped="no"/>
                           </object>
                           <packing>
                             <property name="left_attach">3</property>
@@ -228,6 +425,7 @@
                             <property name="primary_icon_sensitive">True</property>
                             <property name="secondary_icon_sensitive">True</property>
                             <signal name="change-value" handler="on_spinbutton_change_value" swapped="no"/>
+                            <signal name="value-changed" handler="on_spinbutton_change_value2" swapped="no"/>
                           </object>
                           <packing>
                             <property name="left_attach">3</property>
@@ -246,6 +444,7 @@
                             <property name="primary_icon_sensitive">True</property>
                             <property name="secondary_icon_sensitive">True</property>
                             <signal name="change-value" handler="on_spinbutton_change_value" swapped="no"/>
+                            <signal name="value-changed" handler="on_spinbutton_change_value2" swapped="no"/>
                           </object>
                           <packing>
                             <property name="left_attach">3</property>
@@ -379,21 +578,21 @@
                 </child>
               </object>
               <packing>
-                <property name="resize">True</property>
-                <property name="shrink">False</property>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
               </packing>
+            </child>
+            <child>
+              <placeholder/>
             </child>
           </object>
           <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
+            <property name="resize">True</property>
+            <property name="shrink">True</property>
           </packing>
         </child>
       </object>
     </child>
-    <action-widgets>
-      <action-widget response="0">button1</action-widget>
-    </action-widgets>
   </object>
 </interface>

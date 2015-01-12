@@ -173,8 +173,9 @@ def idle(glarea):
         zoom += zfactor
 
     # Needed for synchronous updates
-    glarea.window.invalidate_rect(glarea.allocation, False)
-    glarea.window.process_updates(False)
+    if glarea.window:
+        glarea.window.invalidate_rect(glarea.allocation, False)
+        glarea.window.process_updates(False)
 
     return True
 
@@ -323,15 +324,20 @@ glconfig = gtk.gdkgl.Config(mode=(gtk.gdkgl.MODE_RGB |
 class BoxSetupDialog:
     """ Class doc """
 
-    def on_spinbutton_change_value(self, widget):
+    def on_spinbutton_change_value(self, widget, event):
         """ Function doc """
         print 'teste'
         self.DrawCell()
-
+    
+    def on_spinbutton_change_value2(self, widget, event= None):
+        """ Function doc """
+        print 'teste2'
+        
+        self.DrawCell()
 
     def DrawCell (self):
-        pass
-        """ Function doc """
+        #pass
+        #""" Function doc """
         
         selection="(all)"
         padding=0.0
@@ -411,16 +417,56 @@ class BoxSetupDialog:
         cmd.set('auto_zoom', 0)
         cmd.load_cgo(boundingBox,boxName)
         #cmd.set_frame(-1)
+    
+    def on_TrajectoryTool_Entry_Push(self, entry, data=None):
+		MAX  = int(self.builder.get_object('trajectory_max_entrey').get_text())
+		MIN  = int(self.builder.get_object('trajectory_min_entrey').get_text())
+
+		scale = self.builder.get_object("trajectory_hscale")
+		scale.set_range(MIN, MAX)
+		scale.set_increments(1, 10)
+		scale.set_digits(0)	
+
+    def on_TrajectoryTool_BarSetFrame(self, hscale, text= None,  data=None):            # SETUP  trajectory window
+        valor = hscale.get_value()
+        cmd.frame( int (valor) )
+        #BondTable = self.project.BondTable
+
+    
+    
+    
+    def on_window1_delete_event (self,widget, data=None):
+        """ Function doc """
+        print 'on_window1_delete_event'
+        print dir(gtk)#.quit()
+    
+    def on_window1_destroy_event(self,widget, data=None):
+        """ Function doc """
+        print 'on_window1_destroy_event'
+        
+
+    
     def __init__(self, project=None, window_control=None, main_builder=None, filein = None):
         """ Class initialiser """
         self.project = project
         self.window_control = window_control
-        self.builder = gtk.Builder()
-        self.main_builder = main_builder
+        #self.builder = gtk.Builder()
+        #self.main_builder = main_builder
 
-        self.builder.add_from_file('MastersBOXSetup.glade')
-        self.dialog = self.builder.get_object('dialog1')
-        self.builder.connect_signals(self)
+
+        #---------------------------------- MasterGUI ------------------------------------#
+        self.builder = gtk.Builder()                                                      #
+        self.builder.add_from_file("MastersBOXSetup.glade")                               #
+        self.win     = self.builder.get_object("window1")                                 #
+        self.win.show()                                                                   #
+        self.builder.connect_signals(self)                                                #
+        #self.statusbar = builder.get_object("statusbar")
+        #---------------------------------------------------------------------------------#
+
+
+        #self.builder.add_from_file('MastersBOXSetup.glade')
+        #self.dialog = self.builder.get_object('dialog1')
+        #self.builder.connect_signals(self)
 
         '''
 		--------------------------------------------------
@@ -455,41 +501,7 @@ class BoxSetupDialog:
         print self.maxZ
         
 
-        adjustment1 = gtk.Adjustment(0.0, -1000.0, 1000.0, 1.0, 0.0, 0.0)
-        self.spinbutton_minX  = self.builder.get_object("spinbutton_minX")
-        self.spinbutton_minX.set_adjustment(adjustment1)
-        self.spinbutton_minX.update()
-        self.spinbutton_minX.set_value(int(project['Cell']['minX']))
 
-        adjustment2 = gtk.Adjustment(0.0, -1000.0, 1000.0, 1.0, 0.0, 0.0)
-        self.spinbutton_minY  = self.builder.get_object("spinbutton_minY")
-        self.spinbutton_minY.set_adjustment(adjustment2)
-        self.spinbutton_minY.update()
-        self.spinbutton_minY.set_value(int(project['Cell']['minY']))
-
-        adjustment3 = gtk.Adjustment(0.0, -1000.0, 1000.0, 1.0, 0.0, 0.0)
-        self.spinbutton_minZ  = self.builder.get_object("spinbutton_minZ")
-        self.spinbutton_minZ.set_adjustment(adjustment3)
-        self.spinbutton_minZ.update()
-        self.spinbutton_minZ.set_value(int(project['Cell']['minZ']))
-        
-        adjustment4 = gtk.Adjustment(0.0, -1000.0, 1000.0, 1.0, 0.0, 0.0)
-        self.spinbutton_maxX  = self.builder.get_object("spinbutton_maxX")
-        self.spinbutton_maxX.set_adjustment(adjustment4)
-        self.spinbutton_maxX.update()
-        self.spinbutton_maxX.set_value(int(project['Cell']['maxX']))
-
-        adjustment5 = gtk.Adjustment(0.0, -1000.0, 1000.0, 1.0, 0.0, 0.0)
-        self.spinbutton_maxY  = self.builder.get_object("spinbutton_maxY")
-        self.spinbutton_maxY.set_adjustment(adjustment5)
-        self.spinbutton_maxY.update()
-        self.spinbutton_maxY.set_value(int(project['Cell']['maxY']))
-
-        adjustment6 = gtk.Adjustment(0.0, -1000.0, 1000.0, 1.0, 0.0, 0.0)
-        self.spinbutton_maxZ  = self.builder.get_object("spinbutton_maxZ")
-        self.spinbutton_maxZ.set_adjustment(adjustment5)
-        self.spinbutton_maxZ.update()
-        self.spinbutton_maxZ.set_value(int(project['Cell']['maxZ'])) 
 
 
         #-------------------- config PyMOL ---------------------#
@@ -528,36 +540,73 @@ class BoxSetupDialog:
         cmd.set('ribbon_sampling', 3)                           #
         self.DrawCell()
         
+        if filein == None:
+            cmd.load('/home/labio/Documents/mastersGUI/MastersGUI/test/1AGT.pdb')
+        else:
+            cmd.load(filein)                            #
         
-        cmd.load(filein)                            #
         cmd.show("spheres")                                     #
         cmd.hide('lines')
         cmd.show('ribbon')                                      #
         cmd.color('blue')
+        
         cmd.do('select resn leu')
         cmd.do('color red, sele')
-        
         cmd.do('select resn ala')
         cmd.do('color red, sele')
-        
         cmd.do('select resn ile')
         cmd.do('color red, sele')
-        
         cmd.do('select resn pro')
         cmd.do('color red, sele')
-        
         cmd.do('select resn val')
         cmd.do('color red, sele')
-        
         cmd.do('select resn met')
         cmd.do('color red, sele')
-        
         cmd.do('select resn gly')
         cmd.do('color red, sele')
-        
         cmd.do('select resn cys')
         cmd.do('color red, sele') 
+        
+        adjustment1 = gtk.Adjustment(0.0, -1000.0, 1000.0, 1.0, 0.0, 0.0)
+        self.spinbutton_minX  = self.builder.get_object("spinbutton_minX")
+        self.spinbutton_minX.set_adjustment(adjustment1)
+        self.spinbutton_minX.update()
+        self.spinbutton_minX.set_value(int(project['Cell']['minX']))
 
+        adjustment2 = gtk.Adjustment(0.0, -1000.0, 1000.0, 1.0, 0.0, 0.0)
+        self.spinbutton_minY  = self.builder.get_object("spinbutton_minY")
+        self.spinbutton_minY.set_adjustment(adjustment2)
+        self.spinbutton_minY.update()
+        self.spinbutton_minY.set_value(int(project['Cell']['minY']))
+
+        adjustment3 = gtk.Adjustment(0.0, -1000.0, 1000.0, 1.0, 0.0, 0.0)
+        self.spinbutton_minZ  = self.builder.get_object("spinbutton_minZ")
+        self.spinbutton_minZ.set_adjustment(adjustment3)
+        self.spinbutton_minZ.update()
+        self.spinbutton_minZ.set_value(int(project['Cell']['minZ']))
+        
+        adjustment4 = gtk.Adjustment(0.0, -1000.0, 1000.0, 1.0, 0.0, 0.0)
+        self.spinbutton_maxX  = self.builder.get_object("spinbutton_maxX")
+        self.spinbutton_maxX.set_adjustment(adjustment4)
+        self.spinbutton_maxX.update()
+        self.spinbutton_maxX.set_value(int(project['Cell']['maxX']))
+
+        adjustment5 = gtk.Adjustment(0.0, -1000.0, 1000.0, 1.0, 0.0, 0.0)
+        self.spinbutton_maxY  = self.builder.get_object("spinbutton_maxY")
+        self.spinbutton_maxY.set_adjustment(adjustment5)
+        self.spinbutton_maxY.update()
+        self.spinbutton_maxY.set_value(int(project['Cell']['maxY']))
+
+        adjustment6 = gtk.Adjustment(0.0, -1000.0, 1000.0, 1.0, 0.0, 0.0)
+        self.spinbutton_maxZ  = self.builder.get_object("spinbutton_maxZ")
+        self.spinbutton_maxZ.set_adjustment(adjustment6)
+        self.spinbutton_maxZ.update()
+        self.spinbutton_maxZ.set_value(int(project['Cell']['maxZ'])) 
+        
+        self.DrawCell()
+        
+    def run(self):
+        gtk.main()
 
 
 
@@ -592,8 +641,7 @@ pymol   = pymol2.PyMOL(glarea)
 
 def main():
     dialog = BoxSetupDialog()
-    dialog.dialog.run()
-    dialog.dialog.hide()
+    dialog.run()
 
 if __name__ == '__main__':
     main()

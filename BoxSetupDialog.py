@@ -411,7 +411,7 @@ class BoxSetupDialog:
         cmd.set('auto_zoom', 0)
         cmd.load_cgo(boundingBox,boxName)
         #cmd.set_frame(-1)
-    def __init__(self, project=None, window_control=None, main_builder=None):
+    def __init__(self, project=None, window_control=None, main_builder=None, filein = None):
         """ Class initialiser """
         self.project = project
         self.window_control = window_control
@@ -529,7 +529,7 @@ class BoxSetupDialog:
         self.DrawCell()
         
         
-        cmd.load('/home/labio/Documents/MASTERS/test/MastersSaida.masters')                            #
+        cmd.load(filein)                            #
         cmd.show("spheres")                                     #
         cmd.hide('lines')
         cmd.show('ribbon')                                      #

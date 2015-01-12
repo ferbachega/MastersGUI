@@ -51,6 +51,7 @@ from NewProjectDialog       import NewProjectDialog
 from WindowControl          import WindowControl
 from MCwindow               import MCwindow
 from MastersWorkSpaceDialog import WorkSpaceDialog
+from BoxSetupDialog         import BoxSetupDialog
 # Imports
 from OpenGL.GL import *
 from OpenGL.GLU import *
@@ -217,7 +218,7 @@ class MastersMain():
                 self.selectedID  = str(model.get_value(iter, 1))
                 self.selectedObj = str(model.get_value(iter, 2))
 
-                #self.builder.get_object('TreeViewObjLabel').set_label('- ' +self.selectedObj+' -' )
+                self.builder.get_object('TreeViewObjLabel').set_label('- ' +self.selectedID+' -' )
                 widget = self.builder.get_object('treeview_menu')
                 widget.popup(None, None, None, event.button, event.time)
             
@@ -283,11 +284,7 @@ class MastersMain():
         
         # now we can set the current filename since loading was a success
         #self.filename = filename
-    
-    
-    
-    
-    
+
     
     def row_activated2(self, tree, path, column):
 
@@ -317,10 +314,6 @@ class MastersMain():
         buff = self.text_view.get_buffer()
         buff.set_text('')
         buff.set_modified(False)
-        
-        
-
-
     
     def Save_GUI_ConfigFile(self):
         """ Function doc """
@@ -334,8 +327,7 @@ class MastersMain():
         
         filename = os.path.join(path,'GUI.config')
         json.dump(self.GUIConfig, open(filename, 'w'), indent=2)
-        
-    
+
     def Load_GUI_ConfigFile (self, filename = None):
         """ Function doc """
         #.config
@@ -346,8 +338,34 @@ class MastersMain():
         except:
             print 'error: GUIConfig file not found'
             print 'open WorkSpace Dialog'
+
+
+
+
+    def on_menuitem_show_model_activate(self, menuitem):
+        """ Function doc """
+        #print 'teste'
+        #print "Mostrar menu de contexto botao1"
+        selection     = self.builder.get_object('treeview3').get_selection()
+        model         = self.builder.get_object('treeview3').get_model()
+        (model, iter) = selection.get_selected()
         
-        
+        if iter != None:
+            #print model, iter
+            JobID         = model.get_value(iter, 0)
+            pymol_object  = model.get_value(iter, 2)  # @+
+            #print _object
+            #pprint (self.projects[self.ActivedProject]['Jobs'][JobID])
+            filename = self.projects[self.ActivedProject]['Jobs'][JobID]['Output']
+            #print filename
+            #self.load_file(filename)
+
+
+        dialog = BoxSetupDialog(filein = filename)
+        dialog.dialog.run()
+        dialog.dialog.hide()
+
+
     def __init__(self):
         print '           Intializing MasterGUI object          '
         self.home = os.environ.get('HOME')

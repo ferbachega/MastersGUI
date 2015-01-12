@@ -97,17 +97,18 @@
       </object>
     </child>
     <child>
-      <object class="GtkMenuItem" id="menuitem48">
+      <object class="GtkMenuItem" id="menuitem_show_model">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="label" translatable="yes">label1</property>
+        <property name="label" translatable="yes">show model</property>
+        <signal name="activate" handler="on_menuitem_show_model_activate" swapped="no"/>
       </object>
     </child>
     <child>
       <object class="GtkMenuItem" id="menuitem49">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="label" translatable="yes">label2</property>
+        <property name="label" translatable="yes">show logfile</property>
       </object>
     </child>
     <child>
@@ -120,6 +121,7 @@
       <object class="GtkMenuItem" id="menuitem51">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
+        <property name="label" translatable="yes">plot graph</property>
       </object>
     </child>
     <child>

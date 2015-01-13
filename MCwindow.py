@@ -60,7 +60,11 @@ else:
 def RunMCSimulation( project, parameters):
     """ Function doc """
     Job    =  str(len(project['Jobs']))
-    folder = project['Folder']
+    #path   =  project['Folder']
+    path   = os.path.join(project['Folder'],Job +'_MonteCarlo')
+    if not os.path.exists (path): 
+        os.mkdir (path)
+    
     
     '''                                    
     --- ---------------------------------- ---
@@ -69,26 +73,60 @@ def RunMCSimulation( project, parameters):
     ---                                    ---
     --- ---------------------------------- ---
     '''
-    filename_in = os.path.join(folder, Job+'_MonteCarlo.in')
+    filename_in = os.path.join(path, Job+'_MonteCarlo.in')
     arq         = open(filename_in, 'w')
-    text        = 'input File'
+    
+    #----------------title-----------------#
+    text        = '#  - - MASTERS input file simulation - - \n'
     text        = str(text)
     text =  text + '\n'
+    
+    text =  text + '#ProjectName = ' + project['ProjectName'] + '\n'
+    text =  text + '#User        = ' + project['User'] + '\n'
+    text =  text + '#Generated   = ' + time.asctime(time.localtime(time.time())) + '\n'
+    text =  text + '\n\n'
+
+    text =  text + '# - - JOB-PATH - - \n'
+    text =  text + 'job_path     = ' + '"' + path + '/"' + '\n'
+    text =  text + '\n\n'
+    
+    #--------------------------------------#
+    
+    
+    #-------------------CELL-PARAMETERS------------------#
+    text =  text + '# - - CELL-PARAMETERS - - \n'
+    text =  text + 'max-pxcor = ' + str(project['Cell']["maxX"]) + '\n'
+    text =  text + 'max-pycor = ' + str(project['Cell']["maxY"]) + '\n'
+    text =  text + 'max-pzcor = ' + str(project['Cell']["maxZ"]) + '\n'
+    text =  text + 'min-pxcor = ' + str(project['Cell']["minX"]) + '\n'
+    text =  text + 'min-pycor = ' + str(project['Cell']["minY"]) + '\n'
+    text =  text + 'min-pzcor = ' + str(project['Cell']["minZ"]) + '\n'
+    text =  text + '\n\n'
+
+    #----------------------------------------------------#
+    
+    
+    #-------------------PARAMETERS-------------------#
+    text =  text + '# - - PARAMETERS - - \n'
     for i in parameters:
-        text =  text + i + ':' + parameters[i] + '\n'
+        text =  text + i + ' = ' + parameters[i] + '\n'
+    #------------------------------------------------#
+    
+    
+    
+        
     arq.writelines(text)
     arq.close()
 
 
 
-
+    
     '''                                    
     --- ---------------------------------- ---
     ---                                    ---
     ---            Output File             ---
     ---                                    ---
     --- ---------------------------------- ---
-    '''
     filename_out = os.path.join(folder, Job+'_MonteCarlo.out')
     arq          = open(filename_out, 'w')
     text         = 'Output File'
@@ -109,11 +147,36 @@ def RunMCSimulation( project, parameters):
                 'Start'     : '  -  ',                 
                 'End'       : '  -  ' ,
                 'parameters': parameters}              
+    '''
 
 
 class MCwindow:
     """ Class doc """
-    
+
+    def AddFileToTreeview (self, Filein, Format,  DataType):
+        model = self.builder.get_object('liststore1')
+        data  = [Filein, Format, DataType] #string string string
+        model.append(data)
+
+    def on_treeview_button_release_event(self, tree, event):
+        if event.button == 3:
+            selection     = tree.get_selection()
+            model         = tree.get_model()
+            (model, iter) = selection.get_selected()
+            if iter != None:
+                #self.selectedID  = str(model.get_value(iter, 1))  # @+
+                self.selectedObj    = str(model.get_value(iter, 1))
+                self.selectedFormat = str(model.get_value(iter, 2))
+                
+                self.builder.get_object('TreeViewObjLabel').set_label('- ' +self.selectedObj+' -' )
+                
+                widget = self.builder.get_object('treeview_menu')
+                widget.popup(None, None, None, event.button, event.time)
+            
+        if event.button == 1:
+            print "Mostrar menu de contexto botao1"
+
+
     def RunMCSimulationButton (self, button):
         """ Function doc """
         
@@ -137,41 +200,75 @@ class MCwindow:
         MaxAngle                   = self.builder.get_object('MaxAngle_entry')                 .get_text()
 
         #Searching Agents
-        AddMovieType               = self.builder.get_object('AddMovieType_entry')           .get_text()
+        #AddMovieType               = self.builder.get_object('AddMovieType_entry')           .get_text()
         TemperatureFactorSearch    = self.builder.get_object('TemperatureFactorSearch_entry').get_text()
 
-        #print  'InitialTemperature               :',InitialTemperature               
-        #print  'Temperature-THR                  :',Temperature_THR                  
-        #print  'AttemptsThresholdWithDirector    :',AttemptsThresholdWithDirector    
-        #print  'AttemptsThresholdWithoutDirector :',AttemptsThresholdWithoutDirector 
-        #print  'MaxMumberOfNoImprovenment        :',MaxMumberOfNoImprovenment        
-        #print  'MinTemperatureAllowed            :',MinTemperatureAllowed            
-        #print  'TemperatureDecreaseRatio         :',TemperatureDecreaseRatio         
-        #print  'EnergyVariationThreshold         :',EnergyVariationThreshold         
-        #print  'TotalDirectorsMovies             :',TotalDirectorsMovies             
-        #print  'TemperatureFactorDirector        :',TemperatureFactorDirector        
-        #print  'MinCrank                         :',MinCrank                         
-        #print  'AddWeightPivotCrank              :',AddWeightPivotCrank              
-        #print  'MinPivotDistance                 :',MinPivotDistance                 
-        #print  'AddMovieType                     :',AddMovieType                     
-        #print  'TemperatureFactorSearch          :',TemperatureFactorSearch          
+        #print  'InitialTemperature               :',InitialTemperature                 #time 
+        #print  'Temperature-THR                  :',Temperature_THR                    #user
+        #print  'AttemptsThresholdWithDirector    :',AttemptsThresholdWithDirector      
+        #print  'AttemptsThresholdWithoutDirector :',AttemptsThresholdWithoutDirector   #title = 'jobname'
+        #print  'MaxMumberOfNoImprovenment        :',MaxMumberOfNoImprovenment          #cell -25 25 -20 20 -20 20
+        #print  'MinTemperatureAllowed            :',MinTemperatureAllowed              #min-pxcor = -25.00
+        #print  'TemperatureDecreaseRatio         :',TemperatureDecreaseRatio           #max-pxcor =  25.00
+        #print  'EnergyVariationThreshold         :',EnergyVariationThreshold           #min-pycor = -20.00
+        #print  'TotalDirectorsMovies             :',TotalDirectorsMovies               #max-pycor =  20.00
+        #print  'TemperatureFactorDirector        :',TemperatureFactorDirector          #min-pxcor = -20.00
+        #print  'MinCrank                         :',MinCrank                           #max-pxcor =  20.00
+        #print  'AddWeightPivotCrank              :',AddWeightPivotCrank                
+        #print  'MinPivotDistance                 :',MinPivotDistance                   director-sleep-time = 5
+        #print  'AddMovieType                     :',AddMovieType                       temp_factor_dir = 0.5
+        #print  'TemperatureFactorSearch          :',TemperatureFactorSearch            temp_factor_search = 0.5
+        #                                                                               nr-of-directors = 1
+        #                                                                               limit_prob_dir = 1
+        #                                                                               limit_prob_search = 1
+        #                                                                               attempted_threshold_with_dir = 500
+        #                                                                               job_path="/tmp/"
+        '''
+        ENVIR-----
+        temperature 10
+        temp_thr 0.03
+        attempted_threshold_with_dir 500
+        attempted_threshold_without_dir 40
+        max_number_of_no_improvement_in_energy 20
+        min_temperature_allowed 0.0099
+        temp_decrease_ratio 0.98
+        energy_variation_threshold 1.0E-4
+
+        ----
+        DIRECTORS-----  ESSE ADD WEIGHT SAI, ENTRA MAX CRANK
+        total_dir_moves 20
+        temp_factor_dir 0.5
+        min_crank 2 AA
+        max_crank 3 AA
+        min_pivot_dist 4 AA
+        max_angle 180 degrees
+        ---
+        SEARCHING ----
+        temp_factor_search 0.5
+        TIRAR add move type
+        '''  
+        
+        
+        
+        
+        
         
         parameters =   {
-                        'InitialTemperature               ' : InitialTemperature              ,
-                        'Temperature-THR                  ' : Temperature_THR                 ,
-                        'AttemptsThresholdWithDirector    ' : AttemptsThresholdWithDirector   ,
-                        'AttemptsThresholdWithoutDirector ' : AttemptsThresholdWithoutDirector,
-                        'MaxMumberOfNoImprovenment        ' : MaxMumberOfNoImprovenment       ,
-                        'MinTemperatureAllowed            ' : MinTemperatureAllowed           ,
-                        'TemperatureDecreaseRatio         ' : TemperatureDecreaseRatio        ,
-                        'EnergyVariationThreshold         ' : EnergyVariationThreshold        ,
-                        'TotalDirectorsMovies             ' : TotalDirectorsMovies            ,
-                        'TemperatureFactorDirector        ' : TemperatureFactorDirector       ,
-                        'MinCrank                         ' : MinCrank                        ,
-                        'AddWeightPivotCrank              ' : AddWeightPivotCrank             ,
-                        'MinPivotDistance                 ' : MinPivotDistance                ,
-                        'AddMovieType                     ' : AddMovieType                    ,
-                        'TemperatureFactorSearch          ' : TemperatureFactorSearch         
+                        'temperature'                            : InitialTemperature               ,
+                        'temp_thr'                               : Temperature_THR                  ,
+                        'attempted_threshold_with_dir'           : AttemptsThresholdWithDirector    ,
+                        'attempted_threshold_without_dir'        : AttemptsThresholdWithoutDirector ,
+                        'max_number_of_no_improvement_in_energy' : MaxMumberOfNoImprovenment        ,
+                        'min_temperature_allowed'                : MinTemperatureAllowed            ,
+                        'temp_decrease_ratio'                    : TemperatureDecreaseRatio         ,
+                        'energy_variation_threshold'             : EnergyVariationThreshold         ,
+                        'total_dir_moves'                        : TotalDirectorsMovies             ,
+                        'temp_factor_dir'                        : TemperatureFactorDirector        ,
+                        'min_crank'                              : MinCrank                         ,
+                        'max_crank'                              : AddWeightPivotCrank              ,
+                        'min_pivot_dist'                         : MinPivotDistance                 ,
+                        'max_angle'                              : MaxAngle                         ,
+                        'temp_factor_search'                     : TemperatureFactorSearch         
                         }
         #print self.projects
         project = self.projects[self.ActivedProject]
@@ -190,6 +287,8 @@ class MCwindow:
         FOLDER = HOME +'/.config/MASTERS/'
         json.dump(self.projects, open(FOLDER + 'ProjectHistory.dat', 'w'), indent=2)
             
+    
+    
     def __init__(self, Session =  None): #main_builder = None, projects = None, ActiveProject=None, WindowControl = None):
         
         self.builder = gtk.Builder()
@@ -210,6 +309,15 @@ class MCwindow:
             self.projects       = Session.projects
             self.WindowControl  = Session.WindowControl
             self.main_builder   = Session.builder        
+        
+        project = self.projects[self.ActivedProject]
+        Filein  = project['Jobs']['0']['Output']
+        Filein2 = os.path.split(Filein) 
+        Filein2 = Filein2[-1]
+        Format  = 'pdb'
+        DataType= 'inital coordinates'
+        
+        self.AddFileToTreeview(Filein2, Format,  DataType)
         gtk.main()
         
 

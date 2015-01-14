@@ -210,7 +210,7 @@ class PymolWindow(object):
         if event.button == 3:
             clicado = True
             #print 'gordao'
-            x, y, width, height = glarea.get_allocation()
+            x, y, width, height = self.glarea.get_allocation()
             #print x, y, width, height
             mousepress = event
             button = mousepress.button - 1

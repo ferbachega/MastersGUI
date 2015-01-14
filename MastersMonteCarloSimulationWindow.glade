@@ -408,7 +408,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkEntry" id="entry1">
+                          <object class="GtkEntry" id="job_title_entry">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="invisible_char">●</property>

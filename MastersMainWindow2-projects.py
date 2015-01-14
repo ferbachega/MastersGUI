@@ -249,18 +249,10 @@ class MastersMain():
         JobID = model.get_value(iter, 0)  # @+
         
         
-        #print _object
-        pprint (self.projects[self.ActivedProject]['Jobs'][JobID])
+        #pprint (self.projects[self.ActivedProject]['Jobs'][JobID])
         
-        filename = self.projects[self.ActivedProject]['Jobs'][JobID]['Output']
-        #print filename
-        #pprint (self.projects)
-        MCwindow (self)
-        #self.load_file(filename)
-        #
-        #
-        #if self.MCwindow.Visible == False:
-        #    self.MCwindow.OpenWindow(ActivedProject = self.ActivedProject)
+        #filename = self.projects[self.ActivedProject]['Jobs'][JobID]['Output']
+        MCwindow (self, JobID)
 
 
     def load_file(self, filename):

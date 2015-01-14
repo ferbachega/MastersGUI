@@ -170,21 +170,23 @@ class PymolWindow(object):
         return True
 
     def slabchange(self, button, event):
-        slab = self.slab
+        #self.slab = self.self.slab
+        #print self.self.slab
         x, y, width, height = self.glarea.get_allocation()
         if event.direction == gtk.gdk.SCROLL_UP:
             step = 1.5
-            slab = slab + step
-            slab = slab + step
-            # if  slab >=100:
-            #   slab = 100
+            self.slab = self.slab + step
+            self.slab = self.slab + step
+            # if  self.slab >=100:
+            #   self.slab = 100
         else:
             step = -1.5
+            self.slab = self.slab + step
 
-            slab = slab + step
-            if slab <= -5:
-                slab = -5
-        self.pymol.cmd.clip('slab', slab)
+            if self.slab <= -5:
+                self.slab = -5
+
+        self.pymol.cmd.clip('slab', self.slab)
         return step
         self.pymol.button(button, 0, x, y, 0)
         self.pymol.idle()

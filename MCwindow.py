@@ -286,8 +286,18 @@ class MCwindow:
         HOME   = os.environ.get('HOME')
         FOLDER = HOME +'/.config/MASTERS/'
         json.dump(self.projects, open(FOLDER + 'ProjectHistory.dat', 'w'), indent=2)
-            
-    
+
+
+
+    def PutCellValors (self):
+        """ Function doc """
+        project = self.projects[self.ActivedProject]
+        self.builder.get_object('cell_maxX_entry').set_text(str(project['Cell']["maxX"]))
+        self.builder.get_object('cell_maxY_entry').set_text(str(project['Cell']["maxY"]))
+        self.builder.get_object('cell_maxZ_entry').set_text(str(project['Cell']["maxZ"]))
+        self.builder.get_object('cell_minX_entry').set_text(str(project['Cell']["minX"]))
+        self.builder.get_object('cell_minY_entry').set_text(str(project['Cell']["minY"]))
+        self.builder.get_object('cell_minZ_entry').set_text(str(project['Cell']["minZ"]))
     
     def __init__(self, Session =  None): #main_builder = None, projects = None, ActiveProject=None, WindowControl = None):
         
@@ -309,6 +319,8 @@ class MCwindow:
             self.projects       = Session.projects
             self.WindowControl  = Session.WindowControl
             self.main_builder   = Session.builder        
+
+
         
         project = self.projects[self.ActivedProject]
         Filein  = project['Jobs']['0']['Output']
@@ -316,8 +328,10 @@ class MCwindow:
         Filein2 = Filein2[-1]
         Format  = 'pdb'
         DataType= 'inital coordinates'
-        
+
         self.AddFileToTreeview(Filein2, Format,  DataType)
+        
+        self.PutCellValors()
         gtk.main()
         
 

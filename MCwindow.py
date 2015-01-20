@@ -78,6 +78,7 @@ def RunMCSimulation( project, InputParamaters):
     '''
     filename_in = os.path.join(path, Job+'_MonteCarlo.in')
     arq         = open(filename_in, 'w')
+    input_coords = project['Jobs']['0']['Output']
     
     #----------------title-----------------#
     text        = '#  - - MASTERS input file simulation - - \n'
@@ -94,6 +95,7 @@ def RunMCSimulation( project, InputParamaters):
 
     text =  text + '# - - JOB-PATH - - \n'
     text =  text + 'job_path     = ' + '"' + path + '/"' + '\n'
+    text =  text + 'input_coords = ' + '"' + input_coords + '/"' + '\n'
     text =  text + '\n\n'
     
     #--------------------------------------#
@@ -101,12 +103,12 @@ def RunMCSimulation( project, InputParamaters):
     
     #-------------------CELL-PARAMETERS------------------#
     text =  text + '# - - CELL-PARAMETERS - - \n'
-    text =  text + 'max-pxcor = ' + str(InputParamaters['Cell']["maxX"]) + '\n'
-    text =  text + 'max-pycor = ' + str(InputParamaters['Cell']["maxY"]) + '\n'
-    text =  text + 'max-pzcor = ' + str(InputParamaters['Cell']["maxZ"]) + '\n'
-    text =  text + 'min-pxcor = ' + str(InputParamaters['Cell']["minX"]) + '\n'
-    text =  text + 'min-pycor = ' + str(InputParamaters['Cell']["minY"]) + '\n'
-    text =  text + 'min-pzcor = ' + str(InputParamaters['Cell']["minZ"]) + '\n'
+    text =  text + 'max_pxcor = ' + str(InputParamaters['Cell']["maxX"]) + '\n'
+    text =  text + 'max_pycor = ' + str(InputParamaters['Cell']["maxY"]) + '\n'
+    text =  text + 'max_pzcor = ' + str(InputParamaters['Cell']["maxZ"]) + '\n'
+    text =  text + 'min_pxcor = ' + str(InputParamaters['Cell']["minX"]) + '\n'
+    text =  text + 'min_pycor = ' + str(InputParamaters['Cell']["minY"]) + '\n'
+    text =  text + 'min_pzcor = ' + str(InputParamaters['Cell']["minZ"]) + '\n'
     text =  text + '\n\n'
 
     #----------------------------------------------------#

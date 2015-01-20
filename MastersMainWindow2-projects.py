@@ -288,20 +288,17 @@ class MastersMain():
         
         Jobs   = self.projects[projectID]['Jobs']
         Folder = self.projects[projectID]['Folder']
-        
-        #print Jobs
+
         liststore = self.builder.get_object("liststore1")
         
         try:
             self.WindowControl.AddJobHistoryToTreeview(liststore, Jobs)
-            #MCwindow = MCwindow  (self.builder, self.projects, self.ActivedProject, self.WindowControl)
         except:
             pass
         
         text = 'Project: ' + self.projects[projectID]['ProjectName'] + '    Directory:' + Folder
         self.WindowControl.STATUSBAR_SET_TEXT(text)
         print self.ActivedProject
-        #self.MCwindow.ActivedProject = self.ActivedProject
         
         buff = self.text_view.get_buffer()
         buff.set_text('')
@@ -336,21 +333,16 @@ class MastersMain():
 
     def on_menuitem_show_model_activate(self, menuitem):
         """ Function doc """
-        #print 'teste'
         #print "Mostrar menu de contexto botao1"
         selection     = self.builder.get_object('treeview3').get_selection()
         model         = self.builder.get_object('treeview3').get_model()
         (model, iter) = selection.get_selected()
         
         if iter != None:
-            #print model, iter
             JobID         = model.get_value(iter, 0)
             pymol_object  = model.get_value(iter, 2)  # @+
-            #print _object
-            #pprint (self.projects[self.ActivedProject]['Jobs'][JobID])
             filename = self.projects[self.ActivedProject]['Jobs'][JobID]['Output']
-            #print filename
-            #self.load_file(filename)
+
 
 
         dialog = BoxSetupDialog(filein = filename)

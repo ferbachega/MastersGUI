@@ -116,6 +116,7 @@ def RunMCSimulation( project, InputParamaters):
     
     #-------------------PARAMETERS-------------------#
     text =  text + '# - - PARAMETERS - - \n'
+    text =  text + 'title = ' + '"' + project['ProjectName'] + '"' + '\n'
     for i in parameters:
         if i == 'Title':
             pass

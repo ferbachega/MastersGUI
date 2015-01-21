@@ -46,6 +46,9 @@ from FileChooserWindow           import *
 from pymol import cmd
 from pymol.cgo import *
 
+from py4j.java_gateway import JavaGateway
+
+
 '''
 if not sys.platform.startswith('win'):
     HOME = os.environ.get('HOME')
@@ -54,117 +57,149 @@ else:
 '''
 
 
-
-
-
-def RunMCSimulation( project, InputParamaters):
-    """ Function doc """
+class MonteCarloSimulation:
+    """ Class doc """
     
+    def __init__ (self, project, main_builder):
+        """ Class initialiser """
+        self.project      = project
+        self.folder       = None
+        self.Job          = None # index
+         
+        self.main_builder = main_builder
     
-    Job    =  str(len(project['Jobs']))
-    #path   =  project['Folder']
-    path   = os.path.join(project['Folder'],Job +'_MonteCarlo')
-    if not os.path.exists (path): 
-        os.mkdir (path)
-    
-    parameters = InputParamaters['MCparameters']
-    
-    '''                                    
-    --- ---------------------------------- ---
-    ---                                    ---
-    ---            Input File              ---
-    ---                                    ---
-    --- ---------------------------------- ---
-    '''
-    filename_in = os.path.join(path, Job+'_MonteCarlo.in')
-    arq         = open(filename_in, 'w')
-    input_coords = project['Jobs']['0']['Output']
-    
-    #----------------title-----------------#
-    text        = '#  - - MASTERS input file simulation - - \n'
-    text        = str(text)
-    text =  text + '\n'
-    
-    
-    text =  text + '#Title       = ' + InputParamaters['title'] + '\n'
-    text =  text + '#ProjectName = ' + project['ProjectName'] + '\n'
-    text =  text + '#User        = ' + project['User'] + '\n'
-    text =  text + '#Generated   = ' + time.asctime(time.localtime(time.time())) + '\n'
-    
-    text =  text + '\n\n'
-
-    text =  text + '# - - JOB-PATH - - \n'
-    text =  text + 'job_path     = ' + '"' + path + '/"' + '\n'
-    text =  text + 'input_coords = ' + '"' + input_coords + '/"' + '\n'
-    text =  text + '\n\n'
-    
-    #--------------------------------------#
-    
-    
-    #-------------------CELL-PARAMETERS------------------#
-    text =  text + '# - - CELL-PARAMETERS - - \n'
-    text =  text + 'max_pxcor = ' + str(InputParamaters['Cell']["maxX"]) + '\n'
-    text =  text + 'max_pycor = ' + str(InputParamaters['Cell']["maxY"]) + '\n'
-    text =  text + 'max_pzcor = ' + str(InputParamaters['Cell']["maxZ"]) + '\n'
-    text =  text + 'min_pxcor = ' + str(InputParamaters['Cell']["minX"]) + '\n'
-    text =  text + 'min_pycor = ' + str(InputParamaters['Cell']["minY"]) + '\n'
-    text =  text + 'min_pzcor = ' + str(InputParamaters['Cell']["minZ"]) + '\n'
-    text =  text + '\n\n'
-
-    #----------------------------------------------------#
-    
-    
-    #-------------------PARAMETERS-------------------#
-    text =  text + '# - - PARAMETERS - - \n'
-    text =  text + 'title = ' + '"' + project['ProjectName'] + '"' + '\n'
-    for i in parameters:
-        if i == 'Title':
-            pass
-        else:
-            text =  text + i + ' = ' + parameters[i] + '\n'
-    #------------------------------------------------#
-    
-    
-    
+    def AddNewFolder (self, Job):
+        """ Function doc """
+        # - - - Ceating a new folder - - - #
+        newfolder = os.path.join(self.project['Folder'],Job +'_MonteCarlo')  # eg. /home/LABIO/Workspace/myself.project/1_MonteCarlo
+        if not os.path.exists (newfolder): 
+            os.mkdir (newfolder) 
+        return newfolder
+           
+    def GenerateMastersMCInputFiles (self             , 
+                                     InputParamaters  , 
+                                     folder           , 
+                                     inputfile = None ,
+                                     title = 'test2'):
+        """ Function doc """
         
-    arq.writelines(text)
-    arq.close()
 
+        parameters = InputParamaters['MCparameters']
+        
+        
+        '''                                    
+        --- ---------------------------------- ---
+        ---                                    ---
+        ---            Input File              ---
+        ---                                    ---
+        --- ---------------------------------- ---
+        '''
+         
+        arq          = open(inputfile, 'w')
+        
+        #input_coords = self.project['Jobs']['0']['Output']   - Michele's version
+            
+            
 
+        #----------------------------------INPUT-PARAMETERS-------------------------------------#
+        text        = '#  - - MASTERS input file simulation - - \n'                             #
+        text        = str(text)                                                                 #
+        text =  text + '\n'                                                                     #
+        text =  text + '#JobTitle    = ' + InputParamaters['title'] + '\n'                      #
+        text =  text + '#ProjectName = ' + self.project['ProjectName'] + '\n'                   #
+        text =  text + '#User        = ' + self.project['User'] + '\n'                          #
+        text =  text + '#Generated   = ' + time.asctime(time.localtime(time.time())) + '\n'     #
+        text =  text + '\n\n'                                                                   #
+        text =  text + '# - - JOB-PATH - - \n'                                                  #
+        text =  text + 'job_path     = ' + '"' + folder + '/"' + '\n'                           #
+        text =  text + 'input_coords = ' + '"' + InputParamaters['input_coords'] + '/"\n'         #
+        text =  text + 'title        = ' + '"' + title + '"' + '\n'                             #
+        #text =  text + 'input_coords = ' + '"' + input_coords + '/"' + '\n'- Michele's version #
+        text =  text + '\n\n'                                                                   #
+        #---------------------------------------------------------------------------------------#
 
-    '''                              
-    --- ---------------------------------- ---
-    ---                                    ---
-    ---            Output File             ---
-    ---                                    ---
-    --- ---------------------------------- ---
-    '''
+        
+        #-----------------------------CELL-PARAMETERS-------------------------------#
+        text =  text + '# - - CELL-PARAMETERS - - \n'                               #
+        text =  text + 'max_pxcor = ' + str(InputParamaters['Cell']["maxX"]) + '\n' #
+        text =  text + 'max_pycor = ' + str(InputParamaters['Cell']["maxY"]) + '\n' #
+        text =  text + 'max_pzcor = ' + str(InputParamaters['Cell']["maxZ"]) + '\n' #
+        text =  text + 'min_pxcor = ' + str(InputParamaters['Cell']["minX"]) + '\n' #
+        text =  text + 'min_pycor = ' + str(InputParamaters['Cell']["minY"]) + '\n' #
+        text =  text + 'min_pzcor = ' + str(InputParamaters['Cell']["minZ"]) + '\n' #
+        text =  text + '\n\n'                                                       #
+        #---------------------------------------------------------------------------#
+        
+        
+        #-------------------------------MCPARAMETERS------------------------------#
+        text =  text + '# - - PARAMETERS - - \n'                                  #
+        for i in parameters:                                                      #
+            if i == 'Title':                                                      #
+                pass                                                              #
+            else:                                                                 #
+                text =  text + i + ' = ' + parameters[i] + '\n'                   #
+        #-------------------------------------------------------------------------#
+        arq.writelines(text)
+        arq.close()
+        
+        return inputfile
+
     
-    filename_out = os.path.join(path, Job+'_MonteCarlo.out')
-    arq          = open(filename_out, 'w')
-    text         = 'Output File'
-    text         = str(text)
-    arq.writelines(text)
-    arq.close()
+    def RunMastersMCSimulation (self, InputParamaters):
+        """ Function doc """
+        # - - - - INPUT FILE - - - - # 
+        Job       = str(len(self.project['Jobs']))
+        title     = Job +'_MonteCarlo'
+        newfolder = self.AddNewFolder(Job)
+        inputfile = os.path.join(newfolder , Job +'_MonteCarlo.in')
+        self.GenerateMastersMCInputFiles(InputParamaters, newfolder , inputfile, title)
+        
+        
+        # - - - - - RUN MC SIMULATION - - - - -#
+        gateway = JavaGateway()
+        masters = gateway.entry_point.getMasters()
+        masters.loadParameters(inputfile)
+        
+        print 'Starting simulation'
+        step = 0
+        while masters.is_running():
+            masters.step()
+            try:
+               os.rename( os.path.join(newfolder,title+'-current.pdb'), os.path.join(newfolder,title+'_step_'+str(step)))
+                
+            except:
+                pass
+            step += 1
+            
 
-
- 
-    project['Jobs'][Job] = {
-                'Title'      : InputParamaters['title']     ,
-                'Folder'     : path                    ,                
-                'Input'      : filename_in             ,
-                'InputCoord' : None                    ,
-                'Output'     : filename_out            ,
-                'OutputCoord': None                    ,
-                'LogFile'    : ''                      , 
-                'Type'       : 'MonteCarlo'            , 
-                'Energy'     : str(rdm.random()*1.2345),                   
-                'Start'      : '  -  '                 ,                 
-                'End'        : '  -  '                 ,
-                'parameters' : parameters}              
-
-
-
+  
+        
+        filename_out = Job+'_MonteCarlo.pdb'
+        project['Jobs'][Job] = {
+                    'Title'      : InputParamaters['title'],
+                    'Folder'     : newfolder               ,                
+                    'Input'      : inputfile               ,
+                    'InputCoord' : None                    ,
+                    'Output'     : filename_out            ,
+                    'OutputCoord': None                    ,
+                    'LogFile'    : ''                      , 
+                    'Type'       : 'MonteCarlo'            , 
+                    'Energy'     : str(rdm.random()*1.2345),                   
+                    'Start'      : '  -  '                 ,                 
+                    'End'        : '  -  '                 ,
+                    'parameters' : parameters}              
+        Jobs      = self.project['Jobs']
+        liststore = self.main_builder.get_object("liststore1")
+        try:
+            self.WindowControl.AddJobHistoryToTreeview(liststore, Jobs)
+        except:
+            pass
+            
+        HOME   = os.environ.get('HOME')
+        FOLDER = HOME +'/.config/MASTERS/'
+        json.dump(self.projects, open(FOLDER + 'ProjectHistory.dat', 'w'), indent=2)
+        
+        
 class MCwindow:
     """ Class doc """
 
@@ -226,7 +261,7 @@ class MCwindow:
         
         InputParamaters =  {
                             'title'        : title,
-                                           
+                            'input_coords' : self.inputfiles['input_coords'],
                             'Cell'         : {
                                               "maxX": self.builder.get_object('cell_maxX_entry').get_text(),
                                               "maxY": self.builder.get_object('cell_maxY_entry').get_text(),
@@ -261,21 +296,12 @@ class MCwindow:
         
         
         
+        MCsim = MonteCarloSimulation(self.project, self.main_builder)
+        MCsim.RunMastersMCSimulation(InputParamaters)
         
-        project = self.projects[self.ActivedProject]
-        RunMCSimulation(project, InputParamaters)
+
         
-        Jobs      = project['Jobs']
-        liststore = self.main_builder.get_object("liststore1")
-        
-        try:
-            self.WindowControl.AddJobHistoryToTreeview(liststore, Jobs)
-        except:
-            pass
-            
-        HOME   = os.environ.get('HOME')
-        FOLDER = HOME +'/.config/MASTERS/'
-        json.dump(self.projects, open(FOLDER + 'ProjectHistory.dat', 'w'), indent=2)
+
 
 
 
@@ -298,10 +324,9 @@ class MCwindow:
         self.builder.connect_signals(self)                                   
         
         self.JobID = JobID
-        print self.JobID
         
         self.inputfiles = {
-                          'initialCoords': '/home/labio/Documents/MASTERS/test/MastersSaida.masters',
+                          'input_coords': '/home/labio/Documents/MASTERS/test/MastersSaida.masters',
                           }
         
         if Session == None:
@@ -313,15 +338,16 @@ class MCwindow:
             self.main_builder   = Session.builder        
 
 
+        self.project = self.projects[self.ActivedProject]
         
-
-
-        project = self.projects[self.ActivedProject]
         if self.JobID != None:
-            pprint(project['Jobs'][self.JobID])
+            pprint(self.project)
         
         
-        Filein  = project['Jobs']['0']['Output']
+        
+        
+        
+        Filein  = self.project['Jobs']['0']['Output']
         
         print Filein
         Filein2 = os.path.split(Filein) 
@@ -329,6 +355,7 @@ class MCwindow:
         
         Format  = 'pdb'
         DataType= 'inital coordinates'
+        
         self.AddFileToTreeview(Filein2, Format,  DataType)
         
         self.PutCellValors()

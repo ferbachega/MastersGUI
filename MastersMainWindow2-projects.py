@@ -49,7 +49,7 @@ import pango
 from FileChooserWindow      import *
 from NewProjectDialog       import NewProjectDialog
 from WindowControl          import WindowControl
-from MCwindow               import MCwindow
+from MCwindow               import MonteCarloSimulationWindow
 from MastersWorkSpaceDialog import WorkSpaceDialog
 from BoxSetupDialog         import BoxSetupDialog
 # Imports
@@ -201,7 +201,7 @@ class MastersMain():
         """ Function doc """
         #if self.MCwindow.Visible == False:
         #    self.MCwindow.OpenWindow(ActivedProject =self.ActivedProject)
-        MCwindow (self)
+        MonteCarloSimulationWindow (self)
 
     
     

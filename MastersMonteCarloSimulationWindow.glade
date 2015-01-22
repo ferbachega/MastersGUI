@@ -67,6 +67,51 @@
     <property name="can_focus">False</property>
     <property name="pixbuf">icon_Help.png</property>
   </object>
+  <object class="GtkImage" id="image3">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">NewFile.png</property>
+  </object>
+  <object class="GtkImage" id="image4">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">icon_RemoveFile.png</property>
+  </object>
+  <object class="GtkImage" id="image5">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">icon_CellSetup.png</property>
+  </object>
+  <object class="GtkImage" id="image6">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">deleteSystem.png</property>
+  </object>
+  <object class="GtkImage" id="image7">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">NewFile.png</property>
+  </object>
+  <object class="GtkImage" id="image8">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">icon_RemoveFile.png</property>
+  </object>
+  <object class="GtkImage" id="image9">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">icon_CellSetup.png</property>
+  </object>
+  <object class="GtkListStore" id="liststore1">
+    <columns>
+      <!-- column-name file -->
+      <column type="gchararray"/>
+      <!-- column-name format -->
+      <column type="gchararray"/>
+      <!-- column-name datatype -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
   <object class="GtkWindow" id="window1">
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">MASTERS</property>
@@ -338,13 +383,13 @@
               </packing>
             </child>
             <child>
-              <object class="GtkToolButton" id="toolbutton4">
+              <object class="GtkToolButton" id="RunMCSimulation">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="label" translatable="yes">toolbutton4</property>
                 <property name="use_underline">True</property>
                 <property name="icon_widget">image17</property>
-                <signal name="clicked" handler="RunMCSimulationButton" swapped="no"/>
+                <signal name="clicked" handler="on_button_RunMCSimulation_clicked" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -465,11 +510,10 @@
                                     <property name="model">liststore1</property>
                                     <property name="headers_clickable">False</property>
                                     <property name="rules_hint">True</property>
-                                    <property name="search_column">0</property>
                                     <signal name="button-release-event" handler="on_treeview_button_release_event" swapped="no"/>
                                     <child>
                                       <object class="GtkTreeViewColumn" id="treeviewcolumn1">
-                                        <property name="title" translatable="yes">File</property>
+                                        <property name="title" translatable="yes">Data type</property>
                                         <child>
                                           <object class="GtkCellRendererText" id="cellrenderertext1"/>
                                           <attributes>
@@ -491,7 +535,7 @@
                                     </child>
                                     <child>
                                       <object class="GtkTreeViewColumn" id="treeviewcolumn3">
-                                        <property name="title" translatable="yes">Data type</property>
+                                        <property name="title" translatable="yes">File</property>
                                         <child>
                                           <object class="GtkCellRendererText" id="cellrenderertext3"/>
                                           <attributes>
@@ -1947,51 +1991,6 @@
         </child>
       </object>
     </child>
-  </object>
-  <object class="GtkImage" id="image3">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="pixbuf">NewFile.png</property>
-  </object>
-  <object class="GtkImage" id="image4">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="pixbuf">icon_RemoveFile.png</property>
-  </object>
-  <object class="GtkImage" id="image5">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="pixbuf">icon_CellSetup.png</property>
-  </object>
-  <object class="GtkImage" id="image6">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="pixbuf">deleteSystem.png</property>
-  </object>
-  <object class="GtkImage" id="image7">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="pixbuf">NewFile.png</property>
-  </object>
-  <object class="GtkImage" id="image8">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="pixbuf">icon_RemoveFile.png</property>
-  </object>
-  <object class="GtkImage" id="image9">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="pixbuf">icon_CellSetup.png</property>
-  </object>
-  <object class="GtkListStore" id="liststore1">
-    <columns>
-      <!-- column-name file -->
-      <column type="gchararray"/>
-      <!-- column-name format -->
-      <column type="gchararray"/>
-      <!-- column-name datatype -->
-      <column type="gchararray"/>
-    </columns>
   </object>
   <object class="GtkMenu" id="treeview_menu">
     <property name="visible">True</property>

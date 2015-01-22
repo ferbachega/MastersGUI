@@ -57,35 +57,49 @@ else:
 '''
 
 
+
 class MonteCarloSimulation:
     """ Class doc """
     
-    def __init__ (self, project, main_builder):
-        """ Class initialiser """
-        self.project      = project
-        self.folder       = None
-        self.Job          = None # index
-         
-        self.main_builder = main_builder
-    
+    def __init__ (self            ,  
+                  project         , 
+                  main_builder    ,
+                  InputFiles      ,
+                  InputParamaters ,
+                  OutputParameters):
+          
+        self.project          = project         
+        self.main_builder     = main_builder     
+        self.InputFiles       = InputFiles               
+        self.InputParamaters  = InputParamaters 
+        self.OutputParameters = OutputParameters
+        
+        self.folder           = None
+        self.Job              = None # index
+        self.InputFileName    = None
+        
+        #    # - - - - INPUT FILE - - - - # 
+        #self.Job           = str(len(self.project['Jobs']))
+        #self.title         = Job +'_MonteCarlo'
+        #
+        #self.InputFileName = os.path.join(newfolder , Job +'_MonteCarlo.in')
+                
     def AddNewFolder (self, Job):
         """ Function doc """
         # - - - Ceating a new folder - - - #
         newfolder = os.path.join(self.project['Folder'],Job +'_MonteCarlo')  # eg. /home/LABIO/Workspace/myself.project/1_MonteCarlo
         if not os.path.exists (newfolder): 
             os.mkdir (newfolder) 
-        return newfolder
+        self.folder = newfolder
            
-    def GenerateMastersMCInputFiles (self             , 
-                                     InputParamaters  , 
-                                     folder           , 
-                                     inputfile = None ,
-                                     title = 'test2'):
+    def GenerateMastersMCInputFiles (self, InputFileName ):
         """ Function doc """
+        parameters   = self.InputParamaters['MCparameters']
+        input_coords = self.InputFiles['input_coords']
         
-
-        parameters = InputParamaters['MCparameters']
         
+        Job          = str(len(self.project['Jobs']))
+        self.InputParamaters['outputname'] = Job +'_MonteCarlo'
         
         '''                                    
         --- ---------------------------------- ---
@@ -95,80 +109,88 @@ class MonteCarloSimulation:
         --- ---------------------------------- ---
         '''
          
-        arq          = open(inputfile, 'w')
+        arq          = open(InputFileName, 'w')
         
         #input_coords = self.project['Jobs']['0']['Output']   - Michele's version
-            
-            
-
-        #----------------------------------INPUT-PARAMETERS-------------------------------------#
-        text        = '#  - - MASTERS input file simulation - - \n'                             #
-        text        = str(text)                                                                 #
-        text =  text + '\n'                                                                     #
-        text =  text + '#JobTitle    = ' + InputParamaters['title'] + '\n'                      #
-        text =  text + '#ProjectName = ' + self.project['ProjectName'] + '\n'                   #
-        text =  text + '#User        = ' + self.project['User'] + '\n'                          #
-        text =  text + '#Generated   = ' + time.asctime(time.localtime(time.time())) + '\n'     #
-        text =  text + '\n\n'                                                                   #
-        text =  text + '# - - JOB-PATH - - \n'                                                  #
-        text =  text + 'job_path     = ' + '"' + folder + '/"' + '\n'                           #
-        text =  text + 'input_coords = ' + '"' + InputParamaters['input_coords'] + '/"\n'         #
-        text =  text + 'title        = ' + '"' + title + '"' + '\n'                             #
-        #text =  text + 'input_coords = ' + '"' + input_coords + '/"' + '\n'- Michele's version #
-        text =  text + '\n\n'                                                                   #
-        #---------------------------------------------------------------------------------------#
+        
+        
+        
+        #----------------------------------INPUT-PARAMETERS---------------------------------------#
+        text = '#  - - MASTERS input file simulation - - \n'                                      #
+        text = str(text)                                                                          #
+        text =  text + '\n'                                                                       #
+        text =  text + '#JobTitle    = ' + self.InputParamaters['title']             + '\n'       #
+        text =  text + '#ProjectName = ' + self.project['ProjectName']               + '\n'       #
+        text =  text + '#User        = ' + self.project['User']                      + '\n'       #
+        text =  text + '#Generated   = ' + time.asctime(time.localtime(time.time())) + '\n'       #
+                                                                                                  #
+        text =  text + '\n\n'                                                                     #
+                                                                                                  #
+        text =  text + '# - - JOB-PATH - - \n'                                                    #
+        text =  text + 'job_path     = ' + '"' + self.folder                        + '/"' + '\n' #
+        text =  text + 'input_coords = ' + '"' + input_coords                       + '/"\n'      #
+        text =  text + 'title        = ' + '"' + self.InputParamaters['outputname'] + '"'  + '\n' #
+        text =  text + '\n\n'                                                                     #
+        #-----------------------------------------------------------------------------------------#
 
         
-        #-----------------------------CELL-PARAMETERS-------------------------------#
-        text =  text + '# - - CELL-PARAMETERS - - \n'                               #
-        text =  text + 'max_pxcor = ' + str(InputParamaters['Cell']["maxX"]) + '\n' #
-        text =  text + 'max_pycor = ' + str(InputParamaters['Cell']["maxY"]) + '\n' #
-        text =  text + 'max_pzcor = ' + str(InputParamaters['Cell']["maxZ"]) + '\n' #
-        text =  text + 'min_pxcor = ' + str(InputParamaters['Cell']["minX"]) + '\n' #
-        text =  text + 'min_pycor = ' + str(InputParamaters['Cell']["minY"]) + '\n' #
-        text =  text + 'min_pzcor = ' + str(InputParamaters['Cell']["minZ"]) + '\n' #
-        text =  text + '\n\n'                                                       #
-        #---------------------------------------------------------------------------#
+        
+        #-----------------------------CELL-PARAMETERS------------------------------------#
+        text =  text + '# - - CELL-PARAMETERS - - \n'                                    #
+        text =  text + 'max_pxcor = ' + str(self.InputParamaters['Cell']["maxX"]) + '\n' #
+        text =  text + 'max_pycor = ' + str(self.InputParamaters['Cell']["maxY"]) + '\n' #
+        text =  text + 'max_pzcor = ' + str(self.InputParamaters['Cell']["maxZ"]) + '\n' #
+        text =  text + 'min_pxcor = ' + str(self.InputParamaters['Cell']["minX"]) + '\n' #
+        text =  text + 'min_pycor = ' + str(self.InputParamaters['Cell']["minY"]) + '\n' #
+        text =  text + 'min_pzcor = ' + str(self.InputParamaters['Cell']["minZ"]) + '\n' #
+        text =  text + '\n\n'                                                            #
+        #--------------------------------------------------------------------------------#
+        
         
         
         #-------------------------------MCPARAMETERS------------------------------#
         text =  text + '# - - PARAMETERS - - \n'                                  #
         for i in parameters:                                                      #
-            if i == 'Title':                                                      #
-                pass                                                              #
-            else:                                                                 #
-                text =  text + i + ' = ' + parameters[i] + '\n'                   #
+            text =  text + i + ' = ' + parameters[i] + '\n'                       #
         #-------------------------------------------------------------------------#
+        
         arq.writelines(text)
         arq.close()
-        
-        return inputfile
+        return InputFileName
 
     
-    def RunMastersMCSimulation (self, InputParamaters):
+    def RunMastersMCSimulation (self):
         """ Function doc """
         # - - - - INPUT FILE - - - - # 
-        Job       = str(len(self.project['Jobs']))
-        title     = Job +'_MonteCarlo'
-        newfolder = self.AddNewFolder(Job)
-        inputfile = os.path.join(newfolder , Job +'_MonteCarlo.in')
-        self.GenerateMastersMCInputFiles(InputParamaters, newfolder , inputfile, title)
+        Job           = str(len(self.project['Jobs']))
+        title         = Job +'_MonteCarlo'
+        
+        self.AddNewFolder(Job)
+        
+        InputFileName = os.path.join(self.folder, Job +'_MonteCarlo.in')
+        
+        self.GenerateMastersMCInputFiles(InputFileName)
         
         
         # - - - - - RUN MC SIMULATION - - - - -#
         gateway = JavaGateway()
         masters = gateway.entry_point.getMasters()
-        masters.loadParameters(inputfile)
+        masters.loadParameters(InputFileName)
         
         print 'Starting simulation'
         step = 0
         while masters.is_running():
             masters.step()
-            try:
-               os.rename( os.path.join(newfolder,title+'-current.pdb'), os.path.join(newfolder,title+'_step_'+str(step)))
-                
-            except:
-                pass
+            
+            # ---------- adicionar aqui  tudo que  sera gerado de arquivos ---------#
+            try:                                                                    #
+               os.rename( os.path.join(self.folder,title+'-current.pdb'),           #
+                          os.path.join(self.folder,title+'_step_'+str(step)))       #
+                                                                                    #
+            except:                                                                 #
+                pass                                                                #
+            # ----------------------------------------------------------------------#
+            
             step += 1
             
 
@@ -259,45 +281,62 @@ class MCwindow:
         
         
         
-        InputParamaters =  {
-                            'title'        : title,
-                            'input_coords' : self.inputfiles['input_coords'],
-                            'Cell'         : {
-                                              "maxX": self.builder.get_object('cell_maxX_entry').get_text(),
-                                              "maxY": self.builder.get_object('cell_maxY_entry').get_text(),
-                                              "maxZ": self.builder.get_object('cell_maxZ_entry').get_text(),
-                                              "minX": self.builder.get_object('cell_minX_entry').get_text(),
-                                              "minY": self.builder.get_object('cell_minY_entry').get_text(),
-                                              "minZ": self.builder.get_object('cell_minZ_entry').get_text()
-                                              },
-                                       
-                            'MCparameters' :{
-                                              'temperature'                            : InitialTemperature               ,
-                                              'temp_thr'                               : Temperature_THR                  ,
-                                              'attempted_threshold_with_dir'           : AttemptsThresholdWithDirector    ,
-                                              'attempted_threshold_without_dir'        : AttemptsThresholdWithoutDirector ,
-                                              'max_number_of_no_improvement_in_energy' : MaxMumberOfNoImprovenment        ,
-                                              'min_temperature_allowed'                : MinTemperatureAllowed            ,
-                                              'temp_decrease_ratio'                    : TemperatureDecreaseRatio         ,
-                                              'energy_variation_threshold'             : EnergyVariationThreshold         ,
-                                              'total_dir_moves'                        : TotalDirectorsMovies             ,
-                                              'temp_factor_dir'                        : TemperatureFactorDirector        ,
-                                              'min_crank'                              : MinCrank                         ,
-                                              'max_crank'                              : AddWeightPivotCrank              ,
-                                              'min_pivot_dist'                         : MinPivotDistance                 ,
-                                              'max_angle'                              : MaxAngle                         ,
-                                              'temp_factor_search'                     : TemperatureFactorSearch         
-                                              },
-                            'OutputParamaters': {}
+        InputFiles       =  {
+                             'input_coords'      : self.inputfiles['input_coords'],
+                             'spatial_restraints': None,
+                             'SS_restraints'     : None
+                            } 
+                         
+        InputParamaters  =  {
+                             'title'        : title,
+                             'outputname'   : None ,
+                             
+                             'Cell'         : {
+                                               "maxX": self.builder.get_object('cell_maxX_entry').get_text(),
+                                               "maxY": self.builder.get_object('cell_maxY_entry').get_text(),
+                                               "maxZ": self.builder.get_object('cell_maxZ_entry').get_text(),
+                                               "minX": self.builder.get_object('cell_minX_entry').get_text(),
+                                               "minY": self.builder.get_object('cell_minY_entry').get_text(),
+                                               "minZ": self.builder.get_object('cell_minZ_entry').get_text()
+                                               },
+                                        
+                             'MCparameters' :{
+                                               'temperature'                            : InitialTemperature               ,
+                                               'temp_thr'                               : Temperature_THR                  ,
+                                               'attempted_threshold_with_dir'           : AttemptsThresholdWithDirector    ,
+                                               'attempted_threshold_without_dir'        : AttemptsThresholdWithoutDirector ,
+                                               'max_number_of_no_improvement_in_energy' : MaxMumberOfNoImprovenment        ,
+                                               'min_temperature_allowed'                : MinTemperatureAllowed            ,
+                                               'temp_decrease_ratio'                    : TemperatureDecreaseRatio         ,
+                                               'energy_variation_threshold'             : EnergyVariationThreshold         ,
+                                               'total_dir_moves'                        : TotalDirectorsMovies             ,
+                                               'temp_factor_dir'                        : TemperatureFactorDirector        ,
+                                               'min_crank'                              : MinCrank                         ,
+                                               'max_crank'                              : AddWeightPivotCrank              ,
+                                               'min_pivot_dist'                         : MinPivotDistance                 ,
+                                               'max_angle'                              : MaxAngle                         ,
+                                               'temp_factor_search'                     : TemperatureFactorSearch         
+                                               },
+                             }
+        
+        OutputParameters =  {
+                            'PyMOL_update'       : None,
+                            'PDB_real'           : None,
+                            'Graph_log'          : True,
+                            'Splitted_PDB_files' : False
                             }
-                            
 
 
         
         
         
-        MCsim = MonteCarloSimulation(self.project, self.main_builder)
-        MCsim.RunMastersMCSimulation(InputParamaters)
+        MCsim = MonteCarloSimulation(self.project      , 
+                                     self.main_builder ,
+                                     InputFiles        ,
+                                     InputParamaters   ,
+                                     OutputParameters)
+        
+        MCsim.RunMastersMCSimulation()
         
 
         
@@ -316,6 +355,7 @@ class MCwindow:
         self.builder.get_object('cell_minZ_entry').set_text(str(project['Cell']["minZ"]))
     
     def __init__(self, Session =  None, JobID = None):
+        
         self.builder = gtk.Builder()
         self.builder.add_from_file('MastersMonteCarloSimulationWindow.glade')
         self.builder.connect_signals(self)
@@ -326,22 +366,16 @@ class MCwindow:
         self.JobID = JobID
         
         self.inputfiles = {
-                          'input_coords': '/home/labio/Documents/MASTERS/test/MastersSaida.masters',
+                          'input_coords': '/home/fernando/Documents/MASTERS/MastersInput.pdb',
                           }
         
-        if Session == None:
-            pass
-        else:
-            self.ActivedProject = Session.ActivedProject
-            self.projects       = Session.projects
-            self.WindowControl  = Session.WindowControl
-            self.main_builder   = Session.builder        
-
+        self.ActivedProject = Session.ActivedProject
+        self.projects       = Session.projects
+        self.WindowControl  = Session.WindowControl
+        self.main_builder   = Session.builder        
 
         self.project = self.projects[self.ActivedProject]
-        
-        if self.JobID != None:
-            pprint(self.project)
+        pprint(self.project)
         
         
         

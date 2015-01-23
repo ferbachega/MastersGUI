@@ -94,14 +94,16 @@ class MonteCarloSimulationWindow:
         
         self.Session  = Session  # importing Master session
         
-        self.project  = Session.projects[Session.ActivedProject]
+        try:
+            self.project  = Session.projects[Session.ActivedProject]
 
-        #pprint(self.Session.projects[self.ActivedProject])
-        
-        
-        self.AddFilesToTreeview()
-        self.ImportCellValorsFromProject()
-
+            #pprint(self.Session.projects[self.ActivedProject])
+            
+            
+            self.AddFilesToTreeview()
+            self.ImportCellValorsFromProject()
+        except:
+            pass
 
 
         gtk.main()
@@ -126,7 +128,9 @@ class MonteCarloSimulationWindow:
             data   = [i, " - ", self.InputFiles[i]] #string string string
             model.append(data)
 
-
+    def STATUSBAR_SET_TEXT(self, text):
+        """ Function doc """
+        self.builder.get_object('statusbar1').push(0, text)
         #--------------------------------------------#
         #               MCWINDOW METHODS             #
         #--------------------------------------------#
@@ -315,6 +319,7 @@ class MonteCarloSimulationWindow:
 
     def RunMastersMCSimulation (self):
         """ Function doc """
+        self.STATUSBAR_SET_TEXT('running' )
         #-------------------------INPUT FILE-------------------------------#
         Job     = str(len(self.project['Jobs']))                           #
         title   = Job +'_MonteCarlo'                                       #
@@ -331,10 +336,10 @@ class MonteCarloSimulationWindow:
         masters = gateway.entry_point.getMasters()
         masters.loadParameters(InputFileName)
         
+        
+        
         print 'Starting simulation'
         step = 0
-        
-
         
         self.Session.projects[self.Session.ActivedProject]['Jobs'][Job] = {
                                      'Title'      : self.InputParamaters['title'],
@@ -344,23 +349,22 @@ class MonteCarloSimulationWindow:
                                      'Status'     : 'running'                    ,
                                      'Energy'     : '  -  '                      ,                   
                                      'Start'      : '  -  '                      ,                 
-                                     'End'        : 'running'                      ,
+                                     'End'        : 'running'                    ,
                                      'Energy'     : '  -  '                      ,
                                      'parameters' : self.InputParamaters['MCparameters']
                                      }              
         
         
-        
         projectID  = self.Session.ActivedProject
         Jobs       = self.Session.projects[projectID]['Jobs']
         liststore  = self.Session.builder.get_object("liststore1")
+        pprint(self.Session.projects[self.Session.ActivedProject]['Jobs'][Job])
+        
 
-        try:
-            self.Session.WindowControl.AddJobHistoryToTreeview(liststore, Jobs)
-        except:
-            pass
-       
-
+        
+        self.Session.WindowControl.AddJobHistoryToTreeview(liststore, Jobs)
+        
+        
         while masters.is_running():
             masters.step()
         
@@ -373,9 +377,8 @@ class MonteCarloSimulationWindow:
             # ---------------------------------------------------------------------- #
             
             step += 1
-            
-
-        #filename_out = Job+'_MonteCarlo.pdb'
+        self.Session.projects[self.Session.ActivedProject]['Jobs'][Job]['End'] = 'finished'
+        self.STATUSBAR_SET_TEXT('finished' )
         #project['Jobs'][Job] = {
         #            'Title'      : InputParamaters['title'],
         #            'Folder'     : newfolder               ,                
@@ -396,9 +399,9 @@ class MonteCarloSimulationWindow:
         #except:
         #    pass
         #    
-        #HOME   = os.environ.get('HOME')
-        #FOLDER = HOME +'/.config/MASTERS/'
-        #json.dump(self.projects, open(FOLDER + 'ProjectHistory.dat', 'w'), indent=2)
+        HOME   = os.environ.get('HOME')
+        FOLDER = HOME +'/.config/MASTERS/'
+        json.dump(self.Session.projects, open(FOLDER + 'ProjectHistory.dat', 'w'), indent=2)
 
 
 

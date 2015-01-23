@@ -115,9 +115,6 @@ class WindowControl():
             model.append(data)
             n = n + 1
 
-
-
-
     def STATUSBAR_SET_TEXT(self, text):
         """ Function doc """
         self.builder.get_object('statusbar1').push(0, text)

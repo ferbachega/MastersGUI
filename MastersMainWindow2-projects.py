@@ -193,7 +193,7 @@ class MastersMain():
     def on_toolbutton_SetupBoxSize_clicked (self, button):    
         print "Setup Box Size"        
 
-    def on_toolbutton9_clicked (self, button):
+    def on_button_DeleteProject_clicked (self, button):
         """ Function doc """
         print button 
     

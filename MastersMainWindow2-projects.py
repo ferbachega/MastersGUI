@@ -252,7 +252,7 @@ class MastersMain():
         #pprint (self.projects[self.ActivedProject]['Jobs'][JobID])
         
         #filename = self.projects[self.ActivedProject]['Jobs'][JobID]['Output']
-        MCwindow (self, JobID)
+        MonteCarloSimulationWindow(self, JobID)
 
 
     def load_file(self, filename):
